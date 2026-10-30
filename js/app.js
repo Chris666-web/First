@@ -9,7 +9,7 @@
   const { esc } = window.WidgetParts;
 
   /* ---------- Speichern (nur im Browser dieses Geräts) ---------- */
-  const fresh = () => ({ xp: 0, done: {}, quiz: {}, notes: {}, data: {}, streak: { count: 0, last: null } });
+  const fresh = () => ({ xp: 0, done: {}, quiz: {}, notes: {}, data: {}, ts: {}, streak: { count: 0, last: null } });
   function load() {
     try {
       const raw = JSON.parse(localStorage.getItem(STORE_KEY));
@@ -19,13 +19,68 @@
     }
   }
   let state = load();
-  function save() {
+  function persist() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) { /* Speicher nicht verfügbar */ }
     renderStats();
   }
+  function save() {
+    persist();
+    if (window.Cloud) Cloud.scheduleSync();
+  }
+
+  /* XP ergeben sich immer aus erledigten Lektionen und beim ersten Versuch gelösten Quizfragen */
+  const xpOf = (s) => Object.keys(s.done).length * XP_LESSON + Object.keys(s.quiz).length * XP_QUIZ;
+
+  /*
+   * Zwei Spielstände zusammenführen (dieses Gerät + Konto).
+   * Erledigtes wird vereinigt, bei Notizen und Eingaben gewinnt die neuere Änderung.
+   */
+  function merge(localIn, remoteIn) {
+    let a = Object.assign(fresh(), localIn), b = Object.assign(fresh(), remoteIn);
+    const ra = a.resetAt || 0, rb = b.resetAt || 0;
+    if (rb > ra) a = Object.assign(fresh(), { resetAt: rb });
+    if (ra > rb) b = Object.assign(fresh(), { resetAt: ra });
+    const out = fresh();
+    if (a.resetAt) out.resetAt = a.resetAt;
+    out.done = Object.assign({}, b.done);
+    Object.keys(a.done).forEach((k) => { if (!out.done[k] || a.done[k] < out.done[k]) out.done[k] = a.done[k]; });
+    out.quiz = Object.assign({}, b.quiz, a.quiz);
+    const keys = new Set([...Object.keys(a.ts), ...Object.keys(b.ts)]);
+    [["data", "data"], ["notes", "note"]].forEach(([coll, p]) => [a, b].forEach((s) => Object.keys(s[coll]).forEach((k) => keys.add(p + ":" + k))));
+    keys.forEach((key) => {
+      const i = key.indexOf(":"), kind = key.slice(0, i), name = key.slice(i + 1);
+      const coll = kind === "data" ? "data" : kind === "note" ? "notes" : null;
+      if (!coll) return;
+      const ta = a.ts[key] || 0, tb = b.ts[key] || 0;
+      let src = ta > tb ? a : tb > ta ? b : a[coll][name] !== undefined ? a : b;
+      if (src[coll][name] !== undefined) out[coll][name] = src[coll][name];
+      if (ta || tb) out.ts[key] = Math.max(ta, tb);
+    });
+    const la = a.streak.last || "", lb = b.streak.last || "";
+    out.streak = la > lb ? a.streak : lb > la ? b.streak : { count: Math.max(a.streak.count, b.streak.count), last: a.streak.last };
+    out.xp = xpOf(out);
+    return out;
+  }
+
   window.Kompass = {
     getData: (k) => state.data[k],
-    setData: (k, v) => { state.data[k] = v; save(); }
+    setData: (k, v) => { state.data[k] = v; state.ts["data:" + k] = Date.now(); save(); },
+    getState: () => state,
+    merge,
+    hasProgress: () => Object.keys(state.done).length > 0 || Object.keys(state.notes).length > 0 || Object.keys(state.data).length > 0,
+    /* Stand aus dem Konto übernehmen. Während einer Lektion wird die Seite nicht neu gezeichnet. */
+    replaceState(s, rerender) {
+      state = Object.assign(fresh(), s);
+      persist();
+      if (rerender && !location.hash.startsWith("#lektion-")) route();
+    },
+    /* Beim Abmelden: alles von diesem Gerät entfernen */
+    clearLocal() {
+      state = fresh();
+      run = null;
+      try { localStorage.removeItem(STORE_KEY); } catch (e) { /* egal */ }
+      renderStats();
+    }
   };
 
   const today = () => new Date().toISOString().slice(0, 10);
@@ -75,6 +130,20 @@
     s.innerHTML = `<span class="pill xp" title="Erfahrungspunkte">${ICON("star")}<span class="num">${state.xp}</span> XP</span>
       <span class="pill streak" title="Tage in Folge gelernt">${ICON("flame")}<span class="num">${liveStreak()}</span></span>`;
   }
+  function renderAccountButton() {
+    const el = document.getElementById("account");
+    if (!el || !window.Cloud || !Cloud.enabled) return;
+    el.hidden = false;
+    if (Cloud.user) {
+      el.innerHTML = `<span class="avatar">${esc(Cloud.name.slice(0, 1).toUpperCase())}</span>`;
+      el.setAttribute("aria-label", "Dein Konto: " + Cloud.name);
+      el.title = Cloud.name;
+    } else {
+      el.innerHTML = ICON("user");
+      el.setAttribute("aria-label", "Anmelden");
+      el.title = "Anmelden";
+    }
+  }
   function setTab(name) {
     document.querySelectorAll(".tab").forEach((t) => (t.dataset.tab === name ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current")));
   }
@@ -96,6 +165,9 @@
           <div class="bar"><span style="width:${into}%"></span></div>
         </div>
       </section>
+      ${window.Cloud && Cloud.enabled && Cloud.ready && !Cloud.user
+        ? `<a class="banner" href="#konto">${ICON("user")}<span><b>Lernst du auf mehreren Geräten?</b> Mit einem kostenlosen Konto ist dein Fortschritt überall dabei.</span></a>`
+        : ""}
       ${next
         ? `<a class="continue" href="#lektion-${next.l.id}">
             <div class="stack"><span class="eyebrow">${totalDone() ? "Weiter lernen" : "Hier starten"} · ${esc(next.m.short)}</span><h3>${esc(next.l.title)}</h3><span class="small">${next.l.minutes} Minuten</span></div>
@@ -192,6 +264,7 @@
         const text = e.target.value;
         if (text.trim()) state.notes[st.id] = { text, prompt: st.prompt, lesson: l.title, date: today() };
         else delete state.notes[st.id];
+        state.ts["note:" + st.id] = Date.now();
         save();
       });
     }
@@ -306,14 +379,15 @@
           : `<p class="empty">Hier sammeln sich deine Antworten aus den Nachdenk-Schritten.</p>`}
       </section>
       <section class="panel"><h2>Daten</h2>
-        <p class="small muted">Alles, was du hier eingibst, bleibt in diesem Browser auf diesem Gerät. Es wird nirgendwohin gesendet.</p>
+        <p class="small muted">${window.Cloud && Cloud.user
+          ? "Deine Eingaben werden in deinem Konto gespeichert, damit du sie auf allen Geräten hast. Zurücksetzen löscht den Fortschritt auch im Konto."
+          : "Ohne Konto bleibt alles, was du hier eingibst, nur in diesem Browser auf diesem Gerät."}</p>
         <div class="row" id="reset-row"><button type="button" class="btn ghost" id="reset">Fortschritt zurücksetzen</button></div>
       </section>`;
     app.querySelectorAll("[data-del-goal]").forEach((b) =>
       b.addEventListener("click", () => {
         goals.splice(+b.dataset.delGoal, 1);
-        state.data.goals = goals;
-        save();
+        window.Kompass.setData("goals", goals);
         renderProfile();
       })
     );
@@ -321,7 +395,7 @@
       document.getElementById("reset-row").innerHTML = `<span>Wirklich alles löschen? Das lässt sich nicht rückgängig machen.</span>
         <button type="button" class="btn danger" id="reset-yes">Ja, alles löschen</button>
         <button type="button" class="btn ghost" id="reset-no">Abbrechen</button>`;
-      document.getElementById("reset-yes").addEventListener("click", () => { state = fresh(); save(); location.hash = "#start"; renderHome(); });
+      document.getElementById("reset-yes").addEventListener("click", () => { state = fresh(); state.resetAt = Date.now(); save(); location.hash = "#start"; renderHome(); });
       document.getElementById("reset-no").addEventListener("click", renderProfile);
     });
   }
@@ -330,10 +404,28 @@
   function route() {
     const h = location.hash.replace(/^#/, "");
     if (h.startsWith("lektion-")) renderLesson(h.slice(8));
-    else { run = null; if (h.startsWith("modul-")) renderModule(h.slice(6)); else if (h === "profil") renderProfile(); else renderHome(); }
+    else {
+      run = null;
+      if (h.startsWith("modul-")) renderModule(h.slice(6));
+      else if (h === "profil") renderProfile();
+      else if (h === "konto" || h.startsWith("konto-")) { setTab("konto"); Cloud.render(app, h.slice(6)); }
+      else renderHome();
+    }
     if (!h.startsWith("lektion-")) window.scrollTo(0, 0);
   }
   window.addEventListener("hashchange", route);
   renderStats();
   route();
+
+  // Konto: bei An- oder Abmeldung Kopfzeile und Seite aktualisieren
+  let authKey = "";
+  Cloud.onChange(() => {
+    const k = Cloud.ready + "|" + (Cloud.user ? Cloud.user.id : "");
+    if (k === authKey) return;
+    authKey = k;
+    renderAccountButton();
+    if (!location.hash.startsWith("#lektion-")) route();
+  });
+  renderAccountButton();
+  Cloud.init();
 })();

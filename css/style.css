@@ -646,3 +646,81 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ---------- Konto ---------- */
+.account-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--ink-2);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  flex: none;
+}
+.account-btn svg { width: 18px; height: 18px; }
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--f-display);
+  font-weight: 700;
+}
+.avatar.big { width: 52px; height: 52px; font-size: 1.4rem; flex: none; }
+.banner {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: var(--r-sm);
+  background: var(--accent-soft);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: .95rem;
+}
+.banner svg { width: 22px; height: 22px; flex: none; color: var(--accent); }
+.auth { max-width: 480px; }
+.seg { display: flex; background: var(--surface-2); border-radius: 999px; padding: 4px; gap: 4px; }
+.seg a {
+  flex: 1;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: var(--ink-2);
+  font-weight: 700;
+}
+.seg a[aria-current="page"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+.form { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+.form .field { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+input[type="email"], input[type="password"] {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+}
+.form-msg:empty { display: none; }
+.form-msg { border-radius: var(--r-sm); padding: 10px 14px; width: 100%; }
+.form-msg.good { background: var(--good-soft); }
+.form-msg.bad { background: var(--bad-soft); }
+.sync { font-size: .92rem; padding-left: 22px; position: relative; }
+.sync::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: .45em;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink-2);
+}
+.sync.saved::before { background: var(--good); }
+.sync.saving::before { background: var(--gold); }
+.sync.offline::before { background: var(--bad); }

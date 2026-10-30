@@ -12,8 +12,13 @@ Eine interaktive Lern-App: Man lernt Schritt für Schritt über **Geld und das F
 - **Interaktive Elemente**: Sparplan-Rechner, Inflationsrechner, Bilanz-Spiel zur Geldentstehung, Budget-Planer, Aktien-Simulation, Stärken-Netzdiagramm, Lebensrad, Ikigai-Diagramm, Zielbaukasten
 - **Spielelemente**: Erfahrungspunkte (XP), Level und Lernserie (Tage in Folge)
 - **Mein Kompass**: Hier sammeln sich Stärkenprofil, Lebensrad, Ziele, Ikigai und deine Notizen
+- **Benutzerkonten** (optional): Registrieren, Anmelden, Passwort vergessen, Konto löschen. Der Fortschritt wird zwischen Handy, Tablet und Computer abgeglichen.
 - Läuft auf **Handy, Tablet und Computer**, mit hellem und dunklem Design
-- **Datenschutz**: Alles wird nur im Browser auf dem eigenen Gerät gespeichert, nichts wird verschickt
+- **Ohne Konto** bleibt alles nur im Browser auf dem eigenen Gerät
+
+## Benutzerkonten einschalten
+
+Die App läuft sofort ohne Konten. Damit sich Menschen registrieren können, wird sie einmalig mit dem kostenlosen Dienst Supabase verbunden. Die Schritt-für-Schritt-Anleitung steht in **[KONTEN-EINRICHTEN.md](KONTEN-EINRICHTEN.md)**.
 
 ## App ausprobieren
 
@@ -41,6 +46,9 @@ Alle Texte, Quizfragen und Lektionen stehen in **`js/content.js`**. Die Datei is
 | `js/content.js` | Alle Lerninhalte |
 | `js/widgets.js` | Die interaktiven Rechner und Diagramme |
 | `js/app.js` | Navigation, Fortschritt, Punkte |
+| `js/cloud.js` | Benutzerkonten und Abgleich zwischen Geräten |
+| `js/config.js` | Zugangsdaten für Supabase (hier trägst du sie ein) |
+| `supabase/setup.sql` | Einrichtung der Datenbank in Supabase |
 | `js/icons.js` | Symbole |
 
 ## Hinweis
