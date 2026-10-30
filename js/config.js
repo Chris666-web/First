@@ -8,7 +8,7 @@
  */
 window.KOMPASS_CONFIG = {
   // Project URL aus Supabase, z. B. "https://abcdefghijkl.supabase.co"
-  supabaseUrl: "",
+  supabaseUrl: "https://xrmdidlasfrzaoxcifnd.supabase.co",
 
   // Publishable key (oder "anon public" key) aus Supabase. Dieser Schlüssel darf öffentlich sein.
   supabaseKey: "sb_publishable_HpkUkdzcJjysDgGTMMlfTg_2HaN2e2Z",
