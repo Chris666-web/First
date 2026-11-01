@@ -11,7 +11,7 @@ window.KOMPASS_CONFIG = {
   supabaseUrl: "https://xrmdidlasfrzaoxcifnd.supabase.co",
 
   // Publishable key (oder "anon public" key) aus Supabase. Dieser Schlüssel darf öffentlich sein.
-  supabaseKey: "",
+  supabaseKey: "sb_publishable_HpkUkdzcJjysDgGTMMlfTg_2HaN2e2Z",
 
   // Optional: Link zu deiner Datenschutzerklärung, wird bei der Registrierung angezeigt
   privacyUrl: ""
