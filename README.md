@@ -1,6 +1,6 @@
 # Mein Kompass
 
-Eine interaktive Lern-App: Man lernt Schritt für Schritt über **Geld und das Finanzsystem**, **praktische Werkzeuge**, **persönliche Stärken** und **Selbstverwirklichung**. Dazu gibt es Rechner, Diagramme, Quizfragen und Fragen zum Nachdenken.
+Eine interaktive Lern-App: Man lernt Schritt für Schritt über **Geld und das Finanzsystem**, **praktische Werkzeuge**, **Steuern**, **Absicherung und Altersvorsorge**, **persönliche Stärken**, **Verhandeln** und **Selbstverwirklichung**. Dazu gibt es Rechner, Diagramme, Quizfragen und Fragen zum Nachdenken.
 
 ## Was die App kann
 
