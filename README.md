@@ -26,10 +26,14 @@ Die App läuft sofort ohne Konten. Damit sich Menschen registrieren können, wir
 
 **Für alle im Internet (kostenlos über GitHub Pages):**
 
+GitHub Pages funktioniert kostenlos nur bei **öffentlichen** Repositories. Bei einem privaten Repository braucht es GitHub Pro oder einen anderen kostenlosen Hoster wie Cloudflare Pages oder Netlify.
+
 1. Im GitHub-Projekt oben auf **Settings** klicken
 2. Links **Pages** wählen
-3. Bei „Branch“ den Zweig mit der App auswählen (z. B. `main`), Ordner `/ (root)`, dann **Save**
-4. Nach ein bis zwei Minuten erscheint dort ein Link wie `https://<dein-name>.github.io/First/`
+3. Bei „Branch“ **`main`** auswählen und bei Ordner **`/ (root)`**, dann **Save**. Die App liegt direkt im Hauptverzeichnis, deshalb nicht `/docs` wählen.
+4. Nach ein bis zwei Minuten ist die App unter `https://chris666-web.github.io/First/` erreichbar.
+
+Änderungen gehen immer zuerst auf den Entwicklungs-Branch. Erst wenn sie per Pull Request in `main` übernommen sind, erscheinen sie auf der Live-Seite.
 
 Diesen Link kannst du am Handy öffnen und über „Zum Startbildschirm hinzufügen“ wie eine App ablegen.
 

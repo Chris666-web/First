@@ -27,8 +27,8 @@ Damit entsteht eine Tabelle für den Lernfortschritt. Jede Person kann darin nur
 Supabase muss wissen, wohin es nach dem Klick auf einen Bestätigungslink weiterleiten darf.
 
 1. Klicke links auf **Authentication** und dann auf **URL Configuration**.
-2. Trage bei **Site URL** die Adresse deiner App ein, zum Beispiel `https://dein-name.github.io/First/`. Wie du die App über GitHub Pages veröffentlichst, steht in der [README](README.md).
-3. Trage dieselbe Adresse zusätzlich bei **Redirect URLs** ein und speichere.
+2. Trage bei **Site URL** `https://chris666-web.github.io/First/` ein. Wie die App über GitHub Pages veröffentlicht wird, steht in der [README](README.md).
+3. Trage dieselbe Adresse zusätzlich bei **Redirect URLs** ein und speichere. Wichtig ist der abschließende Schrägstrich `/`.
 
 ## 4. Schlüssel in die App eintragen
 
@@ -46,7 +46,7 @@ window.KOMPASS_CONFIG = {
 };
 ```
 
-Auf GitHub geht das direkt im Browser: Datei öffnen, auf das Stift-Symbol klicken, ändern, unten auf **Commit changes** klicken.
+Auf GitHub geht das direkt im Browser: Datei öffnen, auf das Stift-Symbol klicken, ändern, unten auf **Commit changes** klicken. Achte darauf, dass du dabei auf dem Branch **`main`** bist, denn nur `main` wird live ausgeliefert.
 
 > **Wichtig:** Trage nur den *Publishable key* oder den *anon public* key ein. Er darf öffentlich sein. Den **secret key** oder den **service_role key** niemals in die App eintragen. Damit hätte jede Person Vollzugriff auf alle Daten.
 
