@@ -356,6 +356,329 @@ window.MODULES = [
     ]
   },
   {
+    id: "steuern",
+    title: "Steuern verstehen",
+    short: "Steuern",
+    icon: "percent",
+    desc: "Wie die Einkommensteuer funktioniert, warum sich die Steuererklärung lohnt und was für Zinsen und Aktien gilt.",
+    disclaimer: "Allgemeine Informationen nach Stand 2026, keine Steuerberatung. Beträge und Regeln ändern sich regelmäßig.",
+    lessons: [
+      {
+        id: "steuern-1",
+        title: "Wie die Einkommensteuer funktioniert",
+        minutes: 6,
+        steps: [
+          {
+            type: "text",
+            title: "Vom Brutto zum Netto",
+            body: "<p>Von deinem Bruttogehalt gehen zwei Dinge ab, bevor es auf deinem Konto landet:</p>",
+            points: [
+              "<strong>Sozialabgaben:</strong> Renten-, Kranken-, Pflege- und Arbeitslosenversicherung. Dein Anteil liegt zusammen bei rund 20 % des Bruttos. Den gleichen Betrag ungefähr zahlt dein Arbeitgeber noch einmal obendrauf.",
+              "<strong>Lohnsteuer:</strong> eine Vorauszahlung auf deine Einkommensteuer. Dein Arbeitgeber überweist sie jeden Monat direkt ans Finanzamt."
+            ],
+            tip: "<strong>Kirchensteuer</strong> zahlst du nur als Mitglied einer Kirche: 8 % (Bayern, Baden-Württemberg) oder 9 % deiner Einkommensteuer."
+          },
+          {
+            type: "text",
+            title: "Der Grundfreibetrag",
+            body: "<p>Ein Teil deines Einkommens bleibt immer steuerfrei, damit das Existenzminimum gesichert ist. 2026 sind das:</p><p class=\"big-fact\">12.348 € im Jahr</p><p>Besteuert wird das <strong>zu versteuernde Einkommen</strong>. Das ist dein Einkommen nach Abzug von Werbungskosten, einem Teil der Sozialabgaben und weiteren Posten. Es liegt deshalb deutlich unter deinem Brutto.</p>"
+          },
+          {
+            type: "widget",
+            widget: "incomeTax",
+            title: "Der Steuertarif zum Ausprobieren",
+            intro: "Bewege den Regler. Die eine Linie zeigt, wie viel Steuer auf den nächsten Euro fällt, die andere, wie viel du im Schnitt zahlst."
+          },
+          {
+            type: "text",
+            title: "Zwei Steuersätze, die man oft verwechselt",
+            body: "<p>Der deutsche Tarif steigt stufenlos an. Deshalb gibt es zwei Steuersätze:</p>",
+            points: [
+              "<strong>Grenzsteuersatz:</strong> So viel Steuer zahlst du auf den nächsten verdienten Euro. Er steigt von 14 % bis 42 %, ab 277.826 € sind es 45 %.",
+              "<strong>Durchschnittssteuersatz:</strong> So viel Prozent deines gesamten zu versteuernden Einkommens gehen an Steuer. Er liegt immer darunter."
+            ],
+            tip: "<strong>Darum lohnt sich eine Gehaltserhöhung immer.</strong> Der höhere Satz gilt nur für den zusätzlichen Teil, nicht für dein ganzes Einkommen."
+          },
+          {
+            type: "quiz",
+            q: "Nach einer Gehaltserhöhung steigt Mias Grenzsteuersatz. Was passiert mit ihrem Netto?",
+            options: [
+              "Sie hat am Ende weniger Netto als vorher",
+              "Nur auf den zusätzlichen Teil fällt der höhere Satz an, sie hat also mehr Netto",
+              "Ihr ganzes Gehalt wird jetzt mit 42 % besteuert"
+            ],
+            correct: 1,
+            explain: "Mehr Brutto bedeutet bei der Einkommensteuer immer mehr Netto. Dass man durch eine Erhöhung weniger hat, ist ein verbreiteter Irrtum."
+          },
+          {
+            type: "quiz",
+            q: "Was ist die Lohnsteuer?",
+            options: [
+              "Eine zusätzliche Steuer neben der Einkommensteuer",
+              "Eine Vorauszahlung auf deine Einkommensteuer, die der Arbeitgeber abführt",
+              "Eine Abgabe, die nur Arbeitgeber zahlen"
+            ],
+            correct: 1,
+            explain: "Mit der Steuererklärung wird abgerechnet. War die Vorauszahlung zu hoch, bekommst du Geld zurück."
+          }
+        ]
+      },
+      {
+        id: "steuern-2",
+        title: "Die Steuererklärung lohnt sich",
+        minutes: 6,
+        steps: [
+          {
+            type: "text",
+            title: "Warum Geld zurückkommt",
+            body: "<p>Die Lohnsteuer wird jeden Monat pauschal berechnet. Was du für deinen Job ausgegeben hast, weiß das Finanzamt nicht. Das kannst du erst mit der Steuererklärung geltend machen.</p>",
+            points: [
+              "Viele Arbeitnehmerinnen und Arbeitnehmer bekommen Geld zurück, oft mehrere hundert Euro.",
+              "Bist du nicht zur Abgabe verpflichtet, kannst du die Erklärung bis zu vier Jahre rückwirkend freiwillig abgeben.",
+              "Abgeben kannst du kostenlos über <strong>ELSTER</strong>, das Online-Portal der Finanzverwaltung. Es gibt auch günstige Steuer-Apps."
+            ],
+            tip: "<strong>Pflicht</strong> ist die Erklärung zum Beispiel mit der Steuerklassen-Kombination III/V, bei Nebeneinkünften über 410 € im Jahr oder bei Lohnersatzleistungen wie Elterngeld über 410 €. Abgabefrist ist dann in der Regel der 31. Juli des Folgejahres."
+          },
+          {
+            type: "text",
+            title: "Werbungskosten",
+            body: "<p>Was du für deinen Job ausgibst, sind Werbungskosten. Das Finanzamt rechnet automatisch mit <strong>1.230 € pro Jahr</strong> (Arbeitnehmer-Pauschbetrag). Nur was darüber liegt, bringt dir zusätzlich Geld.</p>",
+            points: [
+              "<strong>Fahrtkosten:</strong> 0,38 € pro Kilometer der einfachen Strecke und Arbeitstag. Seit 2026 gilt das ab dem ersten Kilometer.",
+              "<strong>Homeoffice:</strong> 6 € pro Tag, höchstens 1.260 € im Jahr.",
+              "<strong>Arbeitsmittel:</strong> Laptop, Fachbücher, Arbeitskleidung.",
+              "<strong>Weiteres:</strong> Fortbildungen, Bewerbungskosten, ein beruflich bedingter Umzug."
+            ]
+          },
+          {
+            type: "widget",
+            widget: "werbungskosten",
+            title: "Lohnt sich deine Steuererklärung?",
+            intro: "Trag grob ein, was bei dir anfällt. Die vorausgefüllten Zahlen sind ein Beispiel."
+          },
+          {
+            type: "quiz",
+            q: "Lea fährt 20 km zur Arbeit, an 200 Tagen im Jahr. Wie hoch ist ihre Entfernungspauschale?",
+            options: ["760 €", "1.520 €", "3.040 €"],
+            correct: 1,
+            explain: "20 km × 0,38 € × 200 Tage = 1.520 €. Gezählt wird nur die einfache Strecke, nicht Hin- und Rückweg."
+          },
+          {
+            type: "reflect",
+            id: "steuer-belege",
+            prompt: "Welche Kosten hattest du dieses Jahr für deinen Job? Notiere sie jetzt, dann hast du sie bei der Steuererklärung parat.",
+            placeholder: "Fahrtkosten, Laptop, Fachbuch, Fortbildung …"
+          }
+        ]
+      },
+      {
+        id: "steuern-3",
+        title: "Steuern auf Zinsen und Aktien",
+        minutes: 5,
+        steps: [
+          {
+            type: "text",
+            title: "Die Abgeltungsteuer",
+            body: "<p>Auf Zinsen, Dividenden und Kursgewinne fällt eine pauschale Steuer an: 25 % plus Solidaritätszuschlag, zusammen <strong>26,375 %</strong>. Wer Kirchensteuer zahlt, zahlt etwas mehr.</p><p>Deine Bank zieht die Steuer automatisch ab und überweist sie ans Finanzamt.</p>"
+          },
+          {
+            type: "text",
+            title: "Der Sparerpauschbetrag",
+            body: "<p>Ein Teil deiner Kapitalerträge bleibt jedes Jahr steuerfrei:</p><p class=\"big-fact\">1.000 € pro Jahr</p><p>Für Ehepaare sind es 2.000 €. Damit deine Bank das berücksichtigt, brauchst du einen <strong>Freistellungsauftrag</strong>. Den richtest du im Onlinebanking in wenigen Minuten ein.</p>",
+            tip: "<strong>Mehrere Banken?</strong> Du kannst die 1.000 € aufteilen. Insgesamt gibt es sie aber nur einmal."
+          },
+          {
+            type: "widget",
+            widget: "capitalTax",
+            title: "Wie viel Steuer fällt an?",
+            intro: "Stell deine Erträge ein und probiere aus, was der Freistellungsauftrag ausmacht."
+          },
+          {
+            type: "text",
+            title: "Besonderheiten bei Aktien-ETFs",
+            body: "<p>Bei Fonds, die überwiegend in Aktien anlegen, sind <strong>30 % der Erträge steuerfrei</strong>. Das heißt Teilfreistellung. Der Grund: Die Unternehmen im Fonds haben bereits Steuern gezahlt.</p><p>Bei ETFs, die Erträge wieder anlegen (thesaurierend), fällt außerdem jedes Jahr eine kleine Vorabpauschale an. Auch sie wird mit dem Freistellungsauftrag verrechnet.</p>"
+          },
+          {
+            type: "quiz",
+            q: "Du bekommst 600 € Zinsen im Jahr und hast einen Freistellungsauftrag über 1.000 €. Wie viel Steuer zahlst du?",
+            options: ["0 €", "158,25 €", "150 €"],
+            correct: 0,
+            explain: "600 € liegen unter dem Sparerpauschbetrag. Ohne Freistellungsauftrag hätte die Bank 158,25 € einbehalten. Die könntest du dir nur über die Steuererklärung zurückholen."
+          },
+          {
+            type: "reflect",
+            id: "freistellungsauftrag",
+            prompt: "Hast du bei deinen Banken einen Freistellungsauftrag eingerichtet? Wenn nicht: Wann erledigst du das?"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "vorsorge",
+    title: "Absicherung & Altersvorsorge",
+    short: "Vorsorge",
+    icon: "shield",
+    desc: "Welche Versicherungen du wirklich brauchst und wie du für das Alter vorsorgst.",
+    disclaimer: "Allgemeine Finanzbildung nach Stand 2026, keine Versicherungs-, Renten- oder Anlageberatung.",
+    lessons: [
+      {
+        id: "vorsorge-1",
+        title: "Welche Versicherungen wichtig sind",
+        minutes: 6,
+        steps: [
+          {
+            type: "text",
+            title: "Die Grundregel",
+            body: "<p><strong>Versichere, was dich finanziell ruinieren könnte.</strong> Kleine Schäden zahlst du besser selbst aus deinem Notgroschen.</p>",
+            points: [
+              "<strong>Existenzbedrohend:</strong> Du verletzt jemanden schwer, oder du kannst wegen Krankheit nicht mehr arbeiten.",
+              "<strong>Ärgerlich, aber verkraftbar:</strong> Das Handy fällt runter, der Koffer geht verloren."
+            ],
+            tip: "<strong>Gut zu wissen:</strong> Für die Kundschaft als Ganzes sind Versicherungen ein Verlustgeschäft, sonst könnten die Versicherer nicht wirtschaften. Darum lohnen sie sich nur für große Risiken."
+          },
+          {
+            type: "text",
+            title: "Die wichtigsten Versicherungen",
+            body: "<p>Diese drei sind für fast alle Menschen wichtig:</p>",
+            points: [
+              "<strong>Private Haftpflicht:</strong> Zahlt, wenn du anderen einen Schaden zufügst. Ohne sie haftest du unbegrenzt, im schlimmsten Fall ein Leben lang. Sie kostet oft weniger als 100 € im Jahr. Achte auf eine Deckungssumme von mindestens 10 Millionen €.",
+              "<strong>Krankenversicherung:</strong> In Deutschland Pflicht.",
+              "<strong>Berufsunfähigkeit:</strong> Ersetzt einen Teil deines Einkommens, wenn du aus gesundheitlichen Gründen nicht mehr arbeiten kannst. Häufigste Ursache sind psychische Erkrankungen. Am günstigsten ist sie, wenn du jung und gesund abschließt."
+            ],
+            tip: "<strong>Unabhängige Beratung</strong> bieten die Verbraucherzentralen gegen eine kleine Gebühr an. Sie verkaufen keine Verträge."
+          },
+          {
+            type: "widget",
+            widget: "insuranceCheck",
+            title: "Dein Versicherungs-Check",
+            intro: "Wähle deine Lebenslage und tippe an, welche Versicherungen du schon hast."
+          },
+          {
+            type: "quiz",
+            q: "Welche Versicherung sollte praktisch jeder haben?",
+            options: ["Handyversicherung", "Private Haftpflicht", "Reisegepäckversicherung"],
+            correct: 1,
+            explain: "Ein Haftpflichtschaden kann Millionen kosten, etwa wenn ein Mensch verletzt wird. Die Versicherung kostet dagegen nur wenige Euro im Monat."
+          },
+          {
+            type: "quiz",
+            q: "Warum ist eine Handyversicherung meist unnötig?",
+            options: [
+              "Handys gehen nie kaputt",
+              "Den Schaden kannst du selbst tragen, und die Beiträge sind im Verhältnis hoch",
+              "Sie ist in Deutschland verboten"
+            ],
+            correct: 1,
+            explain: "Über die Jahre zahlst du oft mehr Beiträge, als ein neues Handy kostet. Dazu kommen viele Ausschlüsse im Kleingedruckten."
+          },
+          {
+            type: "reflect",
+            id: "versicherung-plan",
+            prompt: "Welche Versicherung willst du prüfen, kündigen oder neu abschließen?"
+          }
+        ]
+      },
+      {
+        id: "vorsorge-2",
+        title: "Die drei Säulen der Altersvorsorge",
+        minutes: 6,
+        steps: [
+          {
+            type: "text",
+            title: "So funktioniert die gesetzliche Rente",
+            body: "<p>Die gesetzliche Rente ist ein <strong>Umlageverfahren</strong>: Die Beiträge der Berufstätigen von heute zahlen die Renten von heute. Für dich wird also nichts angespart.</p>",
+            points: [
+              "Heute kommen auf einen Rentner knapp zwei Beitragszahler. In den 1960er-Jahren waren es rund sechs.",
+              "Ein Durchschnittsverdiener mit 45 Beitragsjahren bekommt rund 48 % des durchschnittlichen Lohns, beides vor Steuern gerechnet. Das reicht meist nicht, um den Lebensstandard zu halten.",
+              "Die reguläre Altersgrenze steigt schrittweise auf 67 Jahre."
+            ]
+          },
+          {
+            type: "text",
+            title: "Die drei Säulen",
+            body: "<p>Altersvorsorge steht in Deutschland auf drei Säulen:</p>",
+            points: [
+              "<strong>Gesetzliche Rente:</strong> Pflicht für Angestellte. Beamte und viele Selbstständige haben eigene Systeme.",
+              "<strong>Betriebliche Altersvorsorge:</strong> Ein Teil deines Gehalts fließt in einen Vertrag über deinen Arbeitgeber. Wandelst du Gehalt um, muss er in der Regel mindestens 15 % dazugeben.",
+              "<strong>Private Vorsorge:</strong> zum Beispiel ein ETF-Sparplan, eine eigene Immobilie oder staatlich geförderte Verträge."
+            ],
+            tip: "<strong>Achtung:</strong> Die staatlich geförderte private Vorsorge wird gerade reformiert. Informiere dich vor einem Abschluss über den aktuellen Stand, zum Beispiel bei der Verbraucherzentrale."
+          },
+          {
+            type: "text",
+            title: "Deine Renteninformation",
+            body: "<p>Ab 27 Jahren und nach fünf Beitragsjahren schickt dir die Deutsche Rentenversicherung jedes Jahr eine <strong>Renteninformation</strong>. Darin steht, mit wie viel Rente du rechnen kannst.</p><p>In der <strong>Digitalen Rentenübersicht</strong> siehst du online zusätzlich viele Betriebsrenten und private Verträge auf einen Blick.</p>"
+          },
+          {
+            type: "quiz",
+            q: "Wie funktioniert die gesetzliche Rente?",
+            options: [
+              "Jeder spart auf ein eigenes Konto",
+              "Die heutigen Beitragszahler finanzieren die heutigen Renten",
+              "Der Staat legt alle Beiträge in Aktien an"
+            ],
+            correct: 1,
+            explain: "Das heißt Umlageverfahren. Weil es immer mehr Rentner und weniger Beitragszahler gibt, gerät das System unter Druck."
+          },
+          {
+            type: "quiz",
+            q: "Du wandelst 100 € deines Bruttogehalts in eine Betriebsrente um. Was muss dein Arbeitgeber in der Regel tun?",
+            options: ["Nichts", "Mindestens 15 € dazugeben", "Die vollen 100 € übernehmen"],
+            correct: 1,
+            explain: "Der Arbeitgeber spart durch die Umwandlung Sozialabgaben. Deshalb muss er mindestens 15 % zuschießen, soweit er tatsächlich spart. Viele zahlen mehr. Frag nach!"
+          }
+        ]
+      },
+      {
+        id: "vorsorge-3",
+        title: "Deine Rentenlücke berechnen",
+        minutes: 6,
+        steps: [
+          {
+            type: "text",
+            title: "Was ist die Rentenlücke?",
+            body: "<p>Die Rentenlücke ist der Unterschied zwischen dem, was du im Alter brauchst, und dem, was die gesetzliche Rente zahlt.</p><p>Als Faustregel brauchen viele Menschen im Alter etwa <strong>70 bis 80 % ihres letzten Nettoeinkommens</strong>. Manche Kosten fallen weg, etwa für den Arbeitsweg, andere kommen dazu, zum Beispiel für Gesundheit.</p>"
+          },
+          {
+            type: "widget",
+            widget: "pensionGap",
+            title: "Rentenlücken-Rechner",
+            intro: "Nimm die Zahl aus deiner Renteninformation, falls du eine hast. Sonst lass das Beispiel stehen."
+          },
+          {
+            type: "text",
+            title: "Was du jetzt tun kannst",
+            body: "<p>Eine Lücke ist normal. Wichtig ist, dass du sie kennst und rechtzeitig anfängst:</p>",
+            points: [
+              "<strong>Früh starten:</strong> Durch den Zinseszins macht jedes Jahr einen großen Unterschied.",
+              "<strong>Betriebsrente prüfen:</strong> vor allem, wenn dein Arbeitgeber mehr als die Pflicht dazugibt.",
+              "<strong>Breit gestreut anlegen:</strong> Ein ETF-Sparplan passt gut, wenn du viele Jahre Zeit hast.",
+              "<strong>Mitwachsen lassen:</strong> Erhöhe die Sparrate bei jeder Gehaltserhöhung."
+            ]
+          },
+          {
+            type: "quiz",
+            q: "Warum rechnet der Rechner mit einer Rendite nach Inflation?",
+            options: [
+              "Damit alle Beträge in heutiger Kaufkraft vergleichbar sind",
+              "Weil es in Zukunft keine Inflation mehr gibt",
+              "Weil Renten nie steigen"
+            ],
+            correct: 0,
+            explain: "1.000 € in 30 Jahren sind weniger wert als heute. Wer mit Rendite nach Inflation rechnet, kann alles in heutigen Euro vergleichen."
+          },
+          {
+            type: "reflect",
+            id: "rente-schritt",
+            prompt: "Was ist dein erster Schritt für deine Altersvorsorge?",
+            placeholder: "Renteninformation suchen, beim Arbeitgeber nach Betriebsrente fragen …"
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "staerken",
     title: "Deine Stärken",
     short: "Stärken",
@@ -472,6 +795,165 @@ window.MODULES = [
             type: "reflect",
             id: "staerken-experiment",
             prompt: "Welches Mini-Experiment startest du in den nächsten 14 Tagen?"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "verhandeln",
+    title: "Verhandeln",
+    short: "Verhandeln",
+    icon: "chat",
+    desc: "Mehr Gehalt, bessere Preise, faire Lösungen. Verhandeln kann man lernen.",
+    lessons: [
+      {
+        id: "verhandeln-1",
+        title: "Die Grundlagen guter Verhandlungen",
+        minutes: 5,
+        steps: [
+          {
+            type: "text",
+            title: "Verhandeln ist kein Kampf",
+            body: "<p>Das bekannteste Modell stammt von der Harvard-Universität (Roger Fisher und William Ury, 1981). Die Idee: Gute Verhandlungen suchen eine Lösung, mit der beide Seiten leben können.</p>",
+            points: [
+              "<strong>Menschen und Probleme trennen:</strong> hart in der Sache, freundlich zur Person.",
+              "<strong>Interessen statt Positionen:</strong> Frag, warum jemand etwas will.",
+              "<strong>Optionen entwickeln:</strong> Sammelt mehrere Lösungen, bevor ihr entscheidet.",
+              "<strong>Faire Kriterien nutzen:</strong> Marktpreise, Tarifverträge, Vergleichsangebote."
+            ]
+          },
+          {
+            type: "text",
+            title: "Position oder Interesse?",
+            body: "<p>Eine <strong>Position</strong> ist das, was jemand fordert. Das <strong>Interesse</strong> ist der Grund dahinter. Wer die Interessen kennt, findet oft Lösungen, an die vorher niemand gedacht hat.</p>",
+            tip: "<strong>Beispiel:</strong> Zwei streiten um eine Orange. Die eine braucht den Saft, die andere die Schale zum Backen. Wer die Orange einfach halbiert, verschenkt die Hälfte."
+          },
+          {
+            type: "widget",
+            widget: "interestsSort",
+            title: "Erkennst du den Unterschied?",
+            intro: "Ist die Aussage eine Position oder ein Interesse?"
+          },
+          {
+            type: "text",
+            title: "Deine beste Alternative",
+            body: "<p>Vor jeder Verhandlung solltest du wissen, was du tust, wenn ihr euch nicht einigt. Im Harvard-Modell heißt das <strong>BATNA</strong>: die beste Alternative zur verhandelten Einigung.</p><p>Je besser deine Alternative, desto ruhiger verhandelst du. Wer ein zweites Jobangebot hat, muss nicht alles annehmen.</p>"
+          },
+          {
+            type: "quiz",
+            q: "Was ist deine BATNA?",
+            options: ["Dein Wunschergebnis", "Das, was du tust, wenn ihr euch nicht einigt", "Dein erstes Angebot"],
+            correct: 1,
+            explain: "Die BATNA ist dein Plan B. Sie zeigt dir, ab wann ein Angebot schlechter ist als deine Alternative."
+          }
+        ]
+      },
+      {
+        id: "verhandeln-2",
+        title: "Die Gehaltsverhandlung",
+        minutes: 7,
+        steps: [
+          {
+            type: "text",
+            title: "Vorbereitung ist alles",
+            body: "<p>Die meisten Gehaltsgespräche werden vorher entschieden, nicht im Raum.</p>",
+            points: [
+              "<strong>Marktwert kennen:</strong> Der Entgeltatlas der Bundesagentur für Arbeit, Gehaltsreports und Tarifverträge zeigen, was in deinem Beruf üblich ist.",
+              "<strong>Erfolge sammeln:</strong> Was hast du erreicht, verbessert, übernommen? Mit Zahlen, wo es geht.",
+              "<strong>Zeitpunkt wählen:</strong> nach einem Erfolg, im Jahresgespräch oder wenn du neue Aufgaben übernimmst.",
+              "<strong>Untergrenze festlegen:</strong> Ab welchem Betrag sagst du Nein oder schaust dich um?"
+            ]
+          },
+          {
+            type: "widget",
+            widget: "salaryPlan",
+            title: "Deine Verhandlungskarte",
+            intro: "Trag deine Zahlen ein. Die vorausgefüllten Werte sind ein Beispiel. Alles bleibt in deinem Kompass gespeichert."
+          },
+          {
+            type: "text",
+            title: "Der Ankereffekt",
+            body: "<p>Die erste Zahl im Raum prägt das ganze Gespräch. Psychologen nennen das <strong>Ankereffekt</strong>. Nenne deshalb selbst zuerst eine Zahl, etwas über deinem Ziel, aber gut begründbar.</p>",
+            points: [
+              "Eine genaue Zahl wie 52.500 € wirkt durchdachter als eine runde.",
+              "Begründe mit dem Markt und deinen Erfolgen, nicht mit privaten Ausgaben.",
+              "Nach deiner Zahl: schweigen und zuhören.",
+              "Geht beim Geld nichts, verhandle über anderes: Weiterbildung, Homeoffice, Urlaubstage, Jobticket."
+            ]
+          },
+          {
+            type: "quiz",
+            q: "Wie begründest du deine Gehaltsforderung am besten?",
+            options: [
+              "Meine Miete ist gestiegen",
+              "Mit dem Marktwert und meinen Erfolgen im Job",
+              "Mein Kollege verdient mehr"
+            ],
+            correct: 1,
+            explain: "Private Ausgaben sind nicht das Thema deines Arbeitgebers. Was zählt, ist dein Wert für das Unternehmen."
+          },
+          {
+            type: "quiz",
+            q: "Deine Chefin sagt: „Mehr Geld geht dieses Jahr nicht.“ Was ist eine gute Reaktion?",
+            options: [
+              "Sofort kündigen",
+              "Über andere Leistungen sprechen und einen festen Termin für ein neues Gespräch vereinbaren",
+              "Das Thema nie wieder ansprechen"
+            ],
+            correct: 1,
+            explain: "Ein Nein heute ist oft ein „noch nicht“. Mit einem festen Termin und klaren Zielen bis dahin hast du beim nächsten Mal gute Karten."
+          },
+          {
+            type: "reflect",
+            id: "gehalt-erfolge",
+            prompt: "Welche drei Erfolge aus dem letzten Jahr kannst du in einem Gehaltsgespräch nennen?",
+            placeholder: "1. …\n2. …\n3. …"
+          }
+        ]
+      },
+      {
+        id: "verhandeln-3",
+        title: "Verhandeln im Alltag",
+        minutes: 4,
+        steps: [
+          {
+            type: "text",
+            title: "Mehr ist verhandelbar, als du denkst",
+            body: "<p>Nicht nur beim Gehalt lohnt es sich zu fragen:</p>",
+            points: [
+              "<strong>Handy- und Internetverträge:</strong> Mit einem Vergleichsangebot beim Anbieter anrufen.",
+              "<strong>Größere Anschaffungen:</strong> Möbel, Elektronik, Autos. Frag nach Ausstellungsstücken oder einem Rabatt.",
+              "<strong>Handwerker:</strong> Mehrere Angebote einholen und vergleichen.",
+              "<strong>Bank:</strong> Kontogebühren und Dispozinsen ansprechen."
+            ]
+          },
+          {
+            type: "text",
+            title: "Drei Sätze, die helfen",
+            body: "<p>Freundlich gefragt, kostet ein Versuch nichts:</p>",
+            points: [
+              "„Ist das Ihr bester Preis?“",
+              "„Was können Sie mir anbieten, damit ich heute zusage?“",
+              "„Ich habe ein Angebot über … Können Sie da mitgehen?“"
+            ],
+            tip: "<strong>Freundlich bleiben zahlt sich aus.</strong> Menschen kommen eher jemandem entgegen, den sie sympathisch finden."
+          },
+          {
+            type: "quiz",
+            q: "Was bringt dir ein Vergleichsangebot in einer Verhandlung?",
+            options: [
+              "Nichts, Anbieter ignorieren so etwas",
+              "Eine echte Alternative und ein faires Vergleichskriterium",
+              "Nur Ärger mit dem Anbieter"
+            ],
+            correct: 1,
+            explain: "Ein Vergleichsangebot ist deine BATNA und ein objektiver Maßstab zugleich. Beides stärkt deine Position."
+          },
+          {
+            type: "reflect",
+            id: "verhandeln-alltag",
+            prompt: "Was verhandelst du als Nächstes? Einen Vertrag, einen Preis, eine Aufgabe?"
           }
         ]
       }

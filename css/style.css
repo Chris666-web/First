@@ -23,6 +23,9 @@
   --m-werkzeuge: #2f5fd0;
   --m-staerken: #a86400;
   --m-entwicklung: #8a3f8f;
+  --m-steuern: #b0412e;
+  --m-vorsorge: #3d7a2a;
+  --m-verhandeln: #5246b8;
   --shadow: 0 1px 2px rgba(16, 32, 39, .06), 0 6px 20px rgba(16, 32, 39, .06);
 
   --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
@@ -56,6 +59,9 @@
     --m-werkzeuge: #7c9df0;
     --m-staerken: #e3a048;
     --m-entwicklung: #cc85d0;
+    --m-steuern: #ee8a74;
+    --m-vorsorge: #8fcf6f;
+    --m-verhandeln: #a49af0;
     --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .25);
     color-scheme: dark;
   }
@@ -83,6 +89,9 @@
   --m-werkzeuge: #7c9df0;
   --m-staerken: #e3a048;
   --m-entwicklung: #cc85d0;
+  --m-steuern: #ee8a74;
+  --m-vorsorge: #8fcf6f;
+  --m-verhandeln: #a49af0;
   --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .25);
   color-scheme: dark;
 }
@@ -271,6 +280,7 @@ main {
 }
 
 .modules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.modules > :last-child:nth-child(odd) { grid-column: 1 / -1; }
 @media (max-width: 560px) { .modules { grid-template-columns: 1fr; } }
 .module-card {
   --mc: var(--accent);
@@ -724,3 +734,45 @@ input[type="email"], input[type="password"] {
 .sync.saved::before { background: var(--good); }
 .sync.saving::before { background: var(--gold); }
 .sync.offline::before { background: var(--bad); }
+
+/* ---------- Steuern, Vorsorge, Verhandeln ---------- */
+.wk-bar { position: relative; padding-top: 24px; }
+.wk-bar .stackbar { background: var(--surface-2); }
+.wk-mark { position: absolute; top: 18px; bottom: 0; width: 2px; background: var(--ink); }
+.wk-mark span {
+  position: absolute;
+  top: -20px;
+  font-size: .78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.ins-list { display: flex; flex-direction: column; }
+.ins-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 12px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.ins-row b { overflow-wrap: anywhere; hyphens: auto; }
+.ins-row .side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.tag {
+  font-size: .75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+.tag.t-muss { background: var(--accent); color: var(--accent-ink); }
+.tag.t-wichtig { background: var(--gold-soft); color: var(--gold); }
+.tag.t-selten { background: var(--bad-soft); color: var(--bad); }
+.sort-item { display: flex; flex-direction: column; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.sort-item .row { gap: 8px; }
+.chip.correct { border-color: var(--good); background: var(--good-soft); color: var(--good); }
+.chip.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.chip:disabled { cursor: default; }
+.salary-line text { font-family: var(--f-body); font-size: 12.5px; font-weight: 700; }
