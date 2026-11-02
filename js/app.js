@@ -408,6 +408,7 @@
       run = null;
       if (h.startsWith("modul-")) renderModule(h.slice(6));
       else if (h === "profil") renderProfile();
+      else if (h === "impressum" || h === "datenschutz") { setTab(""); Legal.render(app, h); }
       else if (h === "konto" || h.startsWith("konto-")) { setTab("konto"); Cloud.render(app, h.slice(6)); }
       else renderHome();
     }

@@ -5,7 +5,8 @@
  * Mit Konto wird der Fortschritt nach jeder Änderung mit dem Server abgeglichen.
  */
 (function () {
-  const LIB = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js";
+  // Supabase-Bibliothek liegt in der App selbst (Version 2.117.3, MIT-Lizenz), nicht auf einem fremden Server
+  const LIB = "js/vendor/supabase.js";
   const cfg = window.KOMPASS_CONFIG || {};
   const enabled = !!(cfg.supabaseUrl && cfg.supabaseKey);
   const K = () => window.Kompass;
@@ -313,7 +314,9 @@
             <div class="field"><label for="ne">E-Mail</label><input id="ne" type="email" autocomplete="email" required></div>
             <div class="field"><label for="np2">Passwort</label><input id="np2" type="password" autocomplete="new-password" minlength="8" required><span class="small muted">Mindestens 8 Zeichen</span></div>
             <button class="btn" type="submit">Konto erstellen</button>
-            <p class="small muted">Dein Lernfortschritt, deine Ziele und Notizen werden in deinem Konto gespeichert.${cfg.privacyUrl ? ` Mehr dazu in der <a href="${esc(cfg.privacyUrl)}" target="_blank" rel="noopener">Datenschutzerklärung</a>.` : ""}</p>
+            <p class="small muted">Dein Lernfortschritt, deine Ziele und Notizen werden in deinem Konto gespeichert.${cfg.privacyUrl
+              ? ` Mehr dazu in der <a href="${esc(cfg.privacyUrl)}" target="_blank" rel="noopener">Datenschutzerklärung</a>.`
+              : ` Mehr dazu in der <a href="#datenschutz">Datenschutzerklärung</a>.`}</p>
             <p class="form-msg" role="status"></p></form>` : ""}
         ${tab === "vergessen" ? `<form id="f-forgot" class="form" novalidate>
             <p class="muted">Gib deine E-Mail-Adresse ein. Du bekommst einen Link, mit dem du ein neues Passwort festlegst.</p>
