@@ -19,9 +19,9 @@ window.KOMPASS_CONFIG = {
   // Angaben für Impressum und Datenschutzerklärung.
   // Leere Felder erscheinen in der App als gelb markierte Platzhalter.
   betreiber: {
-    name: "",      // Vor- und Nachname oder Firmenname mit Rechtsform
-    anschrift: "", // Straße und Hausnummer
-    ort: "",       // Postleitzahl und Ort, z. B. "1010 Wien"
-    email: ""      // E-Mail-Adresse für Kontakt und Datenschutzanfragen
+    name: "Christoph Freudorfer",      // Vor- und Nachname oder Firmenname mit Rechtsform
+    anschrift: "Ruffenbrunnerstraße 12", // Straße und Hausnummer
+    ort: "2352 Gumpoldskirchen",       // Postleitzahl und Ort, z. B. "1010 Wien"
+    email: "c.freudorfer@gmail.com"      // E-Mail-Adresse für Kontakt und Datenschutzanfragen
   }
 };
