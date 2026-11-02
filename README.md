@@ -54,9 +54,20 @@ Alle Texte, Quizfragen und Lektionen stehen in **`js/content.js`**. Die Datei is
 | `js/widgets.js` | Die interaktiven Rechner und Diagramme |
 | `js/app.js` | Navigation, Fortschritt, Punkte |
 | `js/cloud.js` | Benutzerkonten und Abgleich zwischen Geräten |
-| `js/config.js` | Zugangsdaten für Supabase (hier trägst du sie ein) |
+| `js/config.js` | Zugangsdaten für Supabase und deine Angaben für Impressum und Datenschutz |
+| `js/legal.js` | Texte von Impressum und Datenschutzerklärung |
+| `css/fonts.css`, `fonts/` | Schriften, direkt in der App enthalten |
+| `js/vendor/supabase.js` | Supabase-Bibliothek, direkt in der App enthalten |
 | `supabase/setup.sql` | Einrichtung der Datenbank in Supabase |
 | `js/icons.js` | Symbole |
+
+## Impressum und Datenschutz
+
+Die App hat eigene Seiten für Impressum und Datenschutzerklärung, verlinkt unten auf jeder Seite und bei der Registrierung. Deine Angaben (Name, Anschrift, Ort, E-Mail) trägst du in `js/config.js` unter `betreiber` ein. Solange ein Feld leer ist, erscheint in der App ein gelb markierter Platzhalter.
+
+Schriften und Programmbibliotheken liegen in der App selbst. Beim Öffnen wird nur der eigene Server kontaktiert, nicht Google oder andere Dienste. Supabase wird erst bei Anmeldung und Abgleich angesprochen.
+
+Wenn neue Dienste dazukommen, etwa ein eigener E-Mail-Anbieter oder ein anderer Hoster, muss die Datenschutzerklärung in `js/legal.js` angepasst werden.
 
 ## Hinweis
 

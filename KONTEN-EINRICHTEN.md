@@ -58,6 +58,6 @@ Auf GitHub geht das direkt im Browser: Datei öffnen, auf das Stift-Symbol klick
 
 - **E-Mail-Versand:** Supabase verschickt im kostenlosen Tarif nur wenige E-Mails pro Stunde. Zum Testen reicht das. Bevor viele Menschen die App nutzen, solltest du unter **Authentication → Emails → SMTP Settings** einen eigenen E-Mail-Dienst eintragen (zum Beispiel Brevo, Resend oder das Postfach deines E-Mail-Anbieters). Dort kannst du auch die Texte der E-Mails auf Deutsch ändern.
 - **Pausierung:** Kostenlose Projekte werden nach einer Woche ohne Nutzung pausiert. Du kannst sie im Supabase-Dashboard mit einem Klick wieder starten.
-- **Rechtliches:** Sobald fremde Menschen Konten anlegen, brauchst du in Deutschland ein **Impressum** und eine **Datenschutzerklärung**. Den Link zur Datenschutzerklärung kannst du in `js/config.js` bei `privacyUrl` eintragen. Er erscheint dann bei der Registrierung. Lass dich dazu im Zweifel rechtlich beraten.
+- **Rechtliches:** Sobald fremde Menschen Konten anlegen, brauchst du in Österreich wie in Deutschland ein **Impressum** und eine **Datenschutzerklärung**. Beide Seiten sind in der App schon vorhanden. Deine Angaben trägst du in `js/config.js` unter `betreiber` ein. Lass dich dazu im Zweifel rechtlich beraten.
 - **Was gespeichert wird:** E-Mail-Adresse, Name, erledigte Lektionen, Quizergebnisse, Eingaben in den Rechnern, Ziele und Notizen.
 - **Konto löschen:** Nutzerinnen und Nutzer können ihr Konto in der App unter „Konto“ selbst löschen. Dabei werden auch alle gespeicherten Daten entfernt.
