@@ -68,7 +68,7 @@
       grid += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(t)}" y2="${y(t)}"/>`;
       axis += `<text x="${m.l - 8}" y="${y(t) + 4}" text-anchor="end">${yFmt(t)}</text>`;
     });
-    const every = Math.max(1, Math.ceil(n / (W < 520 ? 4 : 7)));
+    const every = o.every ? (W < 520 ? o.every * 2 : o.every) : Math.max(1, Math.ceil(n / (W < 520 ? 4 : 7)));
     for (let i = 0; i < n; i += every) {
       axis += `<text x="${x(i)}" y="${H - 8}" text-anchor="middle">${o.xFmt(o.xs[i])}</text>`;
     }
@@ -87,6 +87,12 @@
       marks += `<path d="${line}" style="fill:none;stroke:${o.stacked ? "var(--surface)" : s.color};stroke-width:2;stroke-linejoin:round"/>`;
       if (o.stacked) top.forEach((v, i) => (base[i] = v));
     });
+    // Optional: eine feste Markierung, z. B. für den aktuell eingestellten Wert
+    if (o.mark != null) {
+      const i = clamp(o.mark, 0, n - 1);
+      marks += `<line x1="${x(i)}" x2="${x(i)}" y1="${m.t}" y2="${m.t + ph}" style="stroke:var(--ink-2);stroke-width:1.5;stroke-dasharray:4 3"/>`;
+      tops.forEach((t, k) => (marks += `<circle cx="${x(i)}" cy="${y(t[i])}" r="5" style="fill:${o.series[k].color};stroke:var(--surface);stroke-width:2"/>`));
+    }
 
     host.innerHTML = `
       <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.label || "Diagramm")}">
@@ -778,6 +784,381 @@
         label: "Täglich besser gegenüber täglich schlechter",
         tip: (i) => `<b>Tag ${xs[i]}</b><br><span class="sw" style="background:var(--s3)"></span>× ${num(up[i], 2)}<br><span class="sw" style="background:var(--s2)"></span>× ${num(down[i], 2)}`
       });
+    };
+    host.addEventListener("input", update);
+    update();
+  };
+
+  /* ---------- Steuern ---------- */
+
+  // Einkommensteuer-Grundtarif 2026 (§ 32a EStG), Alleinstehende
+  function incomeTax2026(zve) {
+    const x = Math.floor(zve);
+    if (x <= 12348) return 0;
+    if (x <= 17799) { const y = (x - 12348) / 10000; return Math.floor((914.51 * y + 1400) * y); }
+    if (x <= 69878) { const z = (x - 17799) / 10000; return Math.floor((173.1 * z + 2397) * z + 1034.87); }
+    if (x <= 277825) return Math.floor(0.42 * x - 11135.63);
+    return Math.floor(0.45 * x - 19470.38);
+  }
+  function marginalRate2026(zve) {
+    if (zve <= 12348) return 0;
+    if (zve <= 17799) return (2 * 914.51 * ((zve - 12348) / 10000) + 1400) / 10000;
+    if (zve <= 69878) return (2 * 173.1 * ((zve - 17799) / 10000) + 2397) / 10000;
+    return zve <= 277825 ? 0.42 : 0.45;
+  }
+
+  W.incomeTax = function (host) {
+    host.innerHTML = `<div class="widget">
+      <div class="controls">${slider({ key: "zve", label: "Zu versteuerndes Einkommen pro Jahr", min: 0, max: 150000, step: 500, value: 40000 })}</div>
+      <div class="kpis">
+        <div class="kpi"><span class="v" data-k="tax"></span><span class="l">Einkommensteuer pro Jahr</span></div>
+        <div class="kpi"><span class="v" data-k="avg"></span><span class="l">Durchschnittssteuersatz</span></div>
+        <div class="kpi"><span class="v" data-k="marg"></span><span class="l">Grenzsteuersatz</span></div>
+      </div>
+      <p class="verdict" data-k="say" aria-live="polite"></p>
+      ${legend([{ name: "Grenzsteuersatz", color: "var(--s2)" }, { name: "Durchschnittssteuersatz", color: "var(--s1)" }])}
+      <div class="chart"></div>
+      <p class="small muted">Grundtarif 2026 für Alleinstehende, ohne Solidaritätszuschlag und Kirchensteuer.</p>
+    </div>`;
+    const STEP = 2500;
+    const xs = [];
+    for (let v = 0; v <= 150000; v += STEP) xs.push(v);
+    const marg = xs.map((v) => marginalRate2026(v) * 100);
+    const avg = xs.map((v) => (v ? (incomeTax2026(v) / v) * 100 : 0));
+    const update = () => {
+      const zve = readInputs(host).zve;
+      const tax = incomeTax2026(zve), m = marginalRate2026(zve), a = zve ? tax / zve : 0;
+      host.querySelector('[data-out="zve"]').textContent = eur(zve);
+      host.querySelector('[data-k="tax"]').textContent = eur(tax);
+      host.querySelector('[data-k="avg"]').textContent = num(a * 100, 1) + " %";
+      host.querySelector('[data-k="marg"]').textContent = num(m * 100, 1) + " %";
+      host.querySelector('[data-k="say"]').innerHTML = zve <= 12348
+        ? "Dein Einkommen liegt im <b>Grundfreibetrag</b> von 12.348 €. Darauf zahlst du keine Einkommensteuer."
+        : `Von jedem zusätzlich verdienten Euro gehen <b>${num(m * 100)} Cent</b> an die Einkommensteuer. Auf dein gesamtes Einkommen zahlst du im Schnitt <b>${num(a * 100, 1)} %</b>.`;
+      xyChart(host.querySelector(".chart"), {
+        xs, minMax: 45, mark: Math.round(zve / STEP), every: 10,
+        series: [
+          { name: "Grenzsteuersatz", color: "var(--s2)", values: marg },
+          { name: "Durchschnittssteuersatz", color: "var(--s1)", values: avg }
+        ],
+        xFmt: (v) => (v ? num(v / 1000) + " T €" : "0"),
+        yFmt: (t) => num(t) + " %",
+        label: "Grenz- und Durchschnittssteuersatz nach Einkommen",
+        tip: (i) => `<b>${eur(xs[i])}</b><br><span class="sw" style="background:var(--s2)"></span>Grenzsteuersatz ${num(marg[i], 1)} %<br><span class="sw" style="background:var(--s1)"></span>Durchschnitt ${num(avg[i], 1)} %`
+      });
+    };
+    host.addEventListener("input", update);
+    update();
+  };
+
+  W.werbungskosten = function (host) {
+    const PAUSCH = 1230, KM = 0.38, HO = 6, HO_MAX = 1260;
+    const s = K().getData("werbungskosten") || { km: 15, office: 140, home: 60, mittel: 300, bildung: 0, rate: 30 };
+    host.innerHTML = `<div class="widget">
+      <div class="controls">
+        ${numberField({ key: "km", label: "Einfache Strecke zur Arbeit (km)", value: s.km })}
+        ${slider({ key: "office", label: "Tage im Büro pro Jahr", min: 0, max: 230, step: 5, value: s.office })}
+        ${slider({ key: "home", label: "Tage im Homeoffice pro Jahr", min: 0, max: 230, step: 5, value: s.home })}
+        ${numberField({ key: "mittel", label: "Arbeitsmittel, z. B. Laptop (€)", value: s.mittel, step: 10 })}
+        ${numberField({ key: "bildung", label: "Fortbildungen (€)", value: s.bildung, step: 10 })}
+        ${slider({ key: "rate", label: "Dein Grenzsteuersatz", min: 14, max: 42, step: 1, value: s.rate })}
+      </div>
+      <div class="wk-bar"><div class="stackbar" data-k="bar"></div><span class="wk-mark" data-k="mark"><span>Pauschbetrag 1.230 €</span></span></div>
+      ${legend([{ name: "Fahrtkosten", color: "var(--s1)" }, { name: "Homeoffice", color: "var(--s2)" }, { name: "Arbeitsmittel und Fortbildung", color: "var(--s3)" }])}
+      <div class="kpis">
+        <div class="kpi"><span class="v" data-k="sum"></span><span class="l">Werbungskosten gesamt</span></div>
+        <div class="kpi"><span class="v" data-k="over"></span><span class="l">über dem Pauschbetrag</span></div>
+        <div class="kpi"><span class="v" data-k="back"></span><span class="l">geschätzte Erstattung</span></div>
+      </div>
+      <p class="verdict" data-k="say" aria-live="polite"></p>
+      <p class="small muted">Grobe Schätzung nach den Regeln 2026. Die tatsächliche Erstattung hängt von deiner gesamten Steuersituation ab.</p>
+    </div>`;
+    const update = () => {
+      const v = readInputs(host);
+      host.querySelector('[data-out="office"]').textContent = v.office;
+      host.querySelector('[data-out="home"]').textContent = v.home;
+      host.querySelector('[data-out="rate"]').textContent = v.rate + " %";
+      const fahrt = v.km * KM * v.office;
+      const home = Math.min(v.home * HO, HO_MAX);
+      const rest = v.mittel + v.bildung;
+      const sum = fahrt + home + rest;
+      const over = Math.max(0, sum - PAUSCH);
+      const scale = Math.max(sum, PAUSCH) * 1.15;
+      const pct = (x) => ((x / scale) * 100).toFixed(2) + "%";
+      host.querySelector('[data-k="bar"]').innerHTML =
+        `<div class="seg-1" style="flex:0 0 ${pct(fahrt)}"></div><div class="seg-2" style="flex:0 0 ${pct(home)}"></div><div class="seg-3" style="flex:0 0 ${pct(rest)}"></div>`;
+      const mark = host.querySelector('[data-k="mark"]');
+      const at = (PAUSCH / scale) * 100;
+      mark.style.left = at + "%";
+      mark.firstElementChild.style.transform = at > 55 ? "translateX(calc(-100% + 2px))" : "none";
+      host.querySelector('[data-k="sum"]').textContent = eur(sum);
+      host.querySelector('[data-k="over"]').textContent = eur(over);
+      host.querySelector('[data-k="back"]').textContent = "≈ " + eur(over * (v.rate / 100));
+      const tooMany = v.office + v.home > 230 ? " Mehr als rund 230 Arbeitstage im Jahr sind unüblich, das Finanzamt fragt dann eventuell nach." : "";
+      host.querySelector('[data-k="say"]').innerHTML = (over > 0
+        ? `<b>Es lohnt sich.</b> Du liegst ${eur(over)} über dem Pauschbetrag, den das Finanzamt ohnehin anrechnet.`
+        : `Du liegst unter dem Pauschbetrag von 1.230 €. Die Werbungskosten bringen dir nichts extra. Eine Erklärung kann sich trotzdem lohnen, etwa wegen Spenden, Handwerkerkosten oder Versicherungen.`) + tooMany;
+      K().setData("werbungskosten", v);
+    };
+    host.addEventListener("input", update);
+    update();
+  };
+
+  W.capitalTax = function (host) {
+    let etf = true, auftrag = true;
+    host.innerHTML = `<div class="widget">
+      <div class="controls">${slider({ key: "ertrag", label: "Kapitalerträge pro Jahr", min: 0, max: 5000, step: 50, value: 1500 })}</div>
+      <div class="stack" style="gap:8px">
+        <span class="small"><b>Woher kommen die Erträge?</b></span>
+        <div class="chips" role="group" aria-label="Art der Erträge">
+          <button type="button" class="chip" data-type="zins">Zinsen oder Dividenden</button>
+          <button type="button" class="chip" data-type="etf">Aktien-ETF</button>
+        </div>
+        <div class="chips"><button type="button" class="chip" data-r="auftrag">Freistellungsauftrag erteilt</button></div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><span class="v" data-k="free"></span><span class="l">bleiben steuerfrei</span></div>
+        <div class="kpi"><span class="v" data-k="tax"></span><span class="l">Steuer</span></div>
+        <div class="kpi"><span class="v" data-k="net"></span><span class="l">bleiben dir</span></div>
+      </div>
+      <p class="verdict" data-k="say" aria-live="polite"></p>
+    </div>`;
+    const calc = (ertrag, withAuftrag) => {
+      const teil = etf ? ertrag * 0.3 : 0;
+      const base = ertrag - teil;
+      const pausch = withAuftrag ? Math.min(1000, base) : 0;
+      return { teil, pausch, tax: (base - pausch) * 0.26375 };
+    };
+    const update = () => {
+      const ertrag = readInputs(host).ertrag;
+      host.querySelector('[data-out="ertrag"]').textContent = eur(ertrag);
+      host.querySelectorAll("[data-type]").forEach((c) => c.setAttribute("aria-pressed", String((c.dataset.type === "etf") === etf)));
+      host.querySelector('[data-r="auftrag"]').setAttribute("aria-pressed", String(auftrag));
+      const r = calc(ertrag, auftrag);
+      host.querySelector('[data-k="free"]').textContent = eur(r.teil + r.pausch);
+      host.querySelector('[data-k="tax"]').textContent = eur(r.tax, 2);
+      host.querySelector('[data-k="net"]').textContent = eur(ertrag - r.tax, 2);
+      const extra = r.tax - calc(ertrag, true).tax;
+      host.querySelector('[data-k="say"]').innerHTML = !auftrag && extra > 0
+        ? `<b>Ohne Freistellungsauftrag</b> behält die Bank ${eur(extra, 2)} zu viel ein. Zurück bekommst du das nur über die Steuererklärung.`
+        : etf
+        ? `Beim Aktien-ETF sind 30 % der Erträge steuerfrei (Teilfreistellung). Danach greift der Sparerpauschbetrag von 1.000 €.`
+        : `Zinsen und Dividenden sind voll steuerpflichtig, sobald sie den Sparerpauschbetrag von 1.000 € übersteigen.`;
+    };
+    host.querySelectorAll("[data-type]").forEach((c) => c.addEventListener("click", () => { etf = c.dataset.type === "etf"; update(); }));
+    host.querySelector('[data-r="auftrag"]').addEventListener("click", () => { auftrag = !auftrag; update(); });
+    host.addEventListener("input", update);
+    update();
+  };
+
+  /* ---------- Absicherung & Altersvorsorge ---------- */
+
+  const SITUATIONS = [
+    { id: "income", label: "Ich lebe von meinem Arbeitseinkommen" },
+    { id: "auto", label: "Ich habe ein Auto" },
+    { id: "family", label: "Jemand ist finanziell von mir abhängig" }
+  ];
+  const INSURANCES = [
+    { id: "haftpflicht", name: "Private Haftpflicht", why: "Zahlt, wenn du anderen einen Schaden zufügst.", cat: () => "muss" },
+    { id: "kranken", name: "Krankenversicherung", why: "In Deutschland Pflicht.", cat: () => "muss" },
+    { id: "kfz", name: "Kfz-Haftpflicht", why: "Pflicht für jedes zugelassene Auto.", cat: (s) => (s.auto ? "muss" : "none") },
+    { id: "bu", name: "Berufsunfähigkeit", why: "Ersetzt Einkommen, wenn du nicht mehr arbeiten kannst.", cat: (s) => (s.income ? "wichtig" : "kann") },
+    { id: "risikoleben", name: "Risikolebensversicherung", why: "Sichert Angehörige ab, wenn du stirbst.", cat: (s) => (s.family ? "wichtig" : "none") },
+    { id: "hausrat", name: "Hausrat", why: "Sinnvoll bei wertvoller Einrichtung.", cat: () => "kann" },
+    { id: "rechtsschutz", name: "Rechtsschutz", why: "Kann bei Streit mit Arbeitgeber oder Vermieter helfen.", cat: () => "kann" },
+    { id: "handy", name: "Handy- oder Elektronikversicherung", why: "Teuer im Verhältnis zum Schaden.", cat: () => "selten" },
+    { id: "gepaeck", name: "Reisegepäckversicherung", why: "Viele Ausschlüsse, kleiner Schaden.", cat: () => "selten" },
+    { id: "restschuld", name: "Restschuldversicherung", why: "Oft teuer und wird beim Kredit mitverkauft.", cat: () => "selten" },
+    { id: "kapitalleben", name: "Kapitallebensversicherung zum Sparen", why: "Meist hohe Kosten. Sparen und Versichern lieber trennen.", cat: () => "selten" }
+  ];
+  const CAT_LABEL = { muss: "Muss", wichtig: "Wichtig", kann: "Je nach Lage", selten: "Meist unnötig", none: "Für dich nicht nötig" };
+
+  W.insuranceCheck = function (host) {
+    const saved = K().getData("insurance") || {};
+    const sit = Object.assign({ income: true, auto: false, family: false }, saved.sit);
+    const have = Object.assign({}, saved.have);
+    host.innerHTML = `<div class="widget">
+      <div class="stack" style="gap:8px"><span class="small"><b>Deine Lebenslage</b></span>
+        <div class="chips" role="group" aria-label="Lebenslage">${SITUATIONS.map((x) => `<button type="button" class="chip" data-sit="${x.id}">${x.label}</button>`).join("")}</div></div>
+      <div class="ins-list" data-r="list"></div>
+      <div class="stack" data-r="out" aria-live="polite"></div>
+    </div>`;
+    const draw = () => {
+      host.querySelectorAll("[data-sit]").forEach((c) => c.setAttribute("aria-pressed", String(!!sit[c.dataset.sit])));
+      host.querySelector('[data-r="list"]').innerHTML = INSURANCES.map((i) => {
+        const c = i.cat(sit);
+        return `<div class="ins-row"><div class="stack" style="gap:2px;min-width:0"><b>${i.name}</b><span class="small muted">${i.why}</span></div>
+          <div class="side"><span class="tag t-${c}">${CAT_LABEL[c]}</span><button type="button" class="chip" data-have="${i.id}" aria-pressed="${!!have[i.id]}">Habe ich</button></div></div>`;
+      }).join("");
+      host.querySelectorAll("[data-have]").forEach((b) => b.addEventListener("click", () => { have[b.dataset.have] = !have[b.dataset.have]; save(); draw(); }));
+      const missing = INSURANCES.filter((i) => ["muss", "wichtig"].includes(i.cat(sit)) && !have[i.id]);
+      const check = INSURANCES.filter((i) => ["selten", "none"].includes(i.cat(sit)) && have[i.id]);
+      host.querySelector('[data-r="out"]').innerHTML =
+        (missing.length ? `<p class="feedback bad"><strong>Fehlt dir wahrscheinlich:</strong>${missing.map((i) => i.name).join(", ")}</p>` : `<p class="feedback good"><strong>Die wichtigen Risiken sind abgedeckt.</strong>Prüfe trotzdem ab und zu Leistungen und Beiträge.</p>`) +
+        (check.length ? `<p class="feedback bad"><strong>Kritisch prüfen:</strong>${check.map((i) => i.name).join(", ")}. Hier sparst du womöglich Geld.</p>` : "");
+    };
+    const save = () => K().setData("insurance", { sit: Object.assign({}, sit), have: Object.assign({}, have) });
+    host.querySelectorAll("[data-sit]").forEach((c) => c.addEventListener("click", () => { sit[c.dataset.sit] = !sit[c.dataset.sit]; save(); draw(); }));
+    draw();
+  };
+
+  W.pensionGap = function (host) {
+    const KV = 0.89; // grob: Kranken- und Pflegeversicherung der Rentner abziehen
+    const s = K().getData("pension") || { netto: 2400, rente: 1300, anteil: 80, jahre: 30, dauer: 20, rendite: 3 };
+    host.innerHTML = `<div class="widget">
+      <div class="controls">
+        ${numberField({ key: "netto", label: "Dein Netto heute pro Monat (€)", value: s.netto, step: 50 })}
+        ${numberField({ key: "rente", label: "Rente laut Renteninformation, brutto (€)", value: s.rente, step: 50 })}
+        ${slider({ key: "anteil", label: "Bedarf im Alter, Anteil vom Netto", min: 50, max: 100, step: 5, value: s.anteil })}
+        ${slider({ key: "jahre", label: "Jahre bis zur Rente", min: 1, max: 45, step: 1, value: s.jahre })}
+        ${slider({ key: "dauer", label: "Jahre in Rente", min: 10, max: 35, step: 1, value: s.dauer })}
+        ${slider({ key: "rendite", label: "Rendite nach Inflation", min: 0, max: 6, step: 0.5, value: s.rendite })}
+      </div>
+      <div class="stack" style="gap:6px">
+        <div class="row" style="justify-content:space-between"><b>Dein Bedarf im Alter</b><span class="num" data-k="need"></span></div>
+        <div class="stackbar" data-k="bar"></div>
+        ${legend([{ name: "Gesetzliche Rente, netto geschätzt", color: "var(--s1)" }, { name: "Rentenlücke", color: "var(--s2)" }])}
+      </div>
+      <div class="kpis">
+        <div class="kpi"><span class="v" data-k="gap"></span><span class="l">Rentenlücke pro Monat</span></div>
+        <div class="kpi"><span class="v" data-k="cap"></span><span class="l">nötiges Vermögen zum Rentenstart</span></div>
+        <div class="kpi"><span class="v" data-k="save"></span><span class="l">Sparrate pro Monat ab heute</span></div>
+      </div>
+      <p class="small muted">Alle Beträge in heutiger Kaufkraft. Von der Bruttorente werden grob 11 % für Kranken- und Pflegeversicherung abgezogen. Steuern auf die Rente sind nicht berücksichtigt.</p>
+    </div>`;
+    const update = () => {
+      const v = readInputs(host);
+      host.querySelector('[data-out="anteil"]').textContent = v.anteil + " %";
+      host.querySelector('[data-out="jahre"]').textContent = v.jahre;
+      host.querySelector('[data-out="dauer"]').textContent = v.dauer;
+      host.querySelector('[data-out="rendite"]').textContent = num(v.rendite, 1) + " %";
+      const need = (v.netto * v.anteil) / 100;
+      const pension = v.rente * KV;
+      const gap = Math.max(0, need - pension);
+      const r = v.rendite / 100;
+      const annuity = r ? (1 - Math.pow(1 + r, -v.dauer)) / r : v.dauer;
+      const capital = gap * 12 * annuity;
+      const rm = r / 12, n = v.jahre * 12;
+      const rate = capital === 0 ? 0 : rm ? (capital * rm) / (Math.pow(1 + rm, n) - 1) : capital / n;
+      const p1 = need ? clamp((pension / need) * 100, 0, 100) : 100;
+      host.querySelector('[data-k="need"]').textContent = eur(need);
+      host.querySelector('[data-k="bar"]').innerHTML =
+        `<div class="seg-1" style="flex:0 0 ${p1}%">${p1 >= 25 ? eur(Math.min(pension, need)) : ""}</div><div class="seg-2" style="flex:1 1 0">${100 - p1 >= 25 ? eur(gap) : ""}</div>`;
+      host.querySelector('[data-k="gap"]').textContent = eur(gap);
+      host.querySelector('[data-k="cap"]').textContent = eur(Math.round(capital / 1000) * 1000);
+      host.querySelector('[data-k="save"]').textContent = eur(rate);
+      K().setData("pension", v);
+    };
+    host.addEventListener("input", update);
+    update();
+  };
+
+  /* ---------- Verhandeln ---------- */
+
+  const SORT_ITEMS = [
+    { t: "„Ich will 4.000 € brutto.“", a: "pos", why: "Eine konkrete Forderung. Das Interesse dahinter könnte Sicherheit oder Anerkennung sein." },
+    { t: "„Ich möchte mir eine eigene Wohnung leisten können.“", a: "int", why: "Das ist der Grund. Dafür gibt es mehrere Wege: mehr Gehalt, Zuschüsse, weniger Pendelkosten." },
+    { t: "„Ich arbeite ab sofort nur noch drei Tage im Büro.“", a: "pos", why: "Eine feste Forderung. Was steckt dahinter? Vielleicht Zeit für Familie oder ruhiges Arbeiten." },
+    { t: "„Ich brauche mehr Zeit, um meine Kinder von der Kita abzuholen.“", a: "int", why: "Das eigentliche Bedürfnis. Gleitzeit könnte es genauso lösen wie Homeoffice." },
+    { t: "„Der Preis muss unter 200 € liegen.“", a: "pos", why: "Eine Grenze. Das Interesse könnte sein, im Monatsbudget zu bleiben. Ratenzahlung wäre auch eine Lösung." },
+    { t: "„Ich möchte mich im Job weiterentwickeln.“", a: "int", why: "Ein Interesse. Mögliche Lösungen: neue Aufgaben, Weiterbildung, ein Mentor." }
+  ];
+  W.interestsSort = function (host, ctx) {
+    const answers = {};
+    host.innerHTML = `<div class="widget"><div>${SORT_ITEMS.map((it, i) => `<div class="sort-item">
+        <span>${it.t}</span>
+        <div class="row" role="group" aria-label="Position oder Interesse">
+          <button type="button" class="chip" data-i="${i}" data-a="pos">Position</button>
+          <button type="button" class="chip" data-i="${i}" data-a="int">Interesse</button>
+        </div>
+        <p class="small muted" data-why="${i}" aria-live="polite"></p></div>`).join("")}</div>
+      <p class="verdict" data-r="score" aria-live="polite"></p></div>`;
+    const done = () => Object.keys(answers).length;
+    const draw = () => {
+      const right = Object.keys(answers).filter((i) => answers[i] === SORT_ITEMS[i].a).length;
+      host.querySelector('[data-r="score"]').innerHTML = done() < SORT_ITEMS.length
+        ? `${done()} von ${SORT_ITEMS.length} beantwortet.`
+        : `<b>${right} von ${SORT_ITEMS.length} richtig.</b> Frag in deiner nächsten Verhandlung: „Was ist Ihnen dabei wichtig?“`;
+      ctx && ctx.block(done() < SORT_ITEMS.length);
+    };
+    host.querySelectorAll("[data-i]").forEach((b) => b.addEventListener("click", () => {
+      const i = +b.dataset.i;
+      if (answers[i]) return;
+      answers[i] = b.dataset.a;
+      const ok = b.dataset.a === SORT_ITEMS[i].a;
+      host.querySelectorAll(`[data-i="${i}"]`).forEach((x) => {
+        x.disabled = true;
+        if (x.dataset.a === SORT_ITEMS[i].a) x.classList.add("correct");
+        else if (x === b) x.classList.add("wrong");
+      });
+      host.querySelector(`[data-why="${i}"]`).textContent = (ok ? "Richtig. " : "Nicht ganz. ") + SORT_ITEMS[i].why;
+      draw();
+    }));
+    draw();
+  };
+
+  W.salaryPlan = function (host) {
+    const s = Object.assign({ heute: 42000, von: 45000, bis: 52000, ziel: 50000, grenze: 46000, argumente: "", plan: "" }, K().getData("salary"));
+    const field = (key, label, ph) => { const sid = id(key); return `<div class="control"><label for="${sid}">${label}</label><textarea id="${sid}" data-t="${key}" placeholder="${ph}">${esc(s[key])}</textarea></div>`; };
+    host.innerHTML = `<div class="widget">
+      <div class="controls">
+        ${numberField({ key: "heute", label: "Dein Gehalt heute (€ brutto/Jahr)", value: s.heute, step: 500 })}
+        ${numberField({ key: "von", label: "Marktspanne von (€)", value: s.von, step: 500 })}
+        ${numberField({ key: "bis", label: "Marktspanne bis (€)", value: s.bis, step: 500 })}
+        ${numberField({ key: "ziel", label: "Dein Ziel (€)", value: s.ziel, step: 500 })}
+        ${numberField({ key: "grenze", label: "Deine Untergrenze (€)", value: s.grenze, step: 500 })}
+      </div>
+      <div class="stack" style="gap:8px"><div class="chart salary-line" data-r="line"></div><div data-r="keys"></div></div>
+      <div class="kpis">
+        <div class="kpi"><span class="v" data-k="anker"></span><span class="l">Vorschlag für deine erste Zahl</span></div>
+        <div class="kpi"><span class="v" data-k="plus"></span><span class="l">Ziel im Vergleich zu heute</span></div>
+      </div>
+      <p class="verdict" data-k="say" aria-live="polite"></p>
+      <div class="ikigai-grid">
+        ${field("argumente", "Deine drei stärksten Argumente", "z. B. Projekt X geleitet, neue Kundin gewonnen, Abläufe verbessert")}
+        ${field("plan", "Dein Plan B, falls es kein Ja gibt", "z. B. Weiterbildung verhandeln, Termin in 6 Monaten, Stellenangebote ansehen")}
+      </div>
+    </div>`;
+    const round500 = (x) => Math.round(x / 500) * 500;
+    const update = () => {
+      const v = readInputs(host);
+      host.querySelectorAll("[data-t]").forEach((t) => (v[t.dataset.t] = t.value));
+      const anker = round500(v.ziel * 1.06);
+      const box = host.querySelector('[data-r="line"]');
+      const W2 = Math.max(300, Math.round(box.clientWidth) || 600), H2 = 74, pad = 14;
+      const vals = [v.heute, v.von, v.bis, v.ziel, v.grenze, anker].filter((x) => x > 0);
+      const lo = Math.min(...vals) * 0.97, hi = Math.max(...vals) * 1.03;
+      const x = (val) => pad + ((W2 - 2 * pad) * (val - lo)) / (hi - lo || 1);
+      const marks = [
+        { val: v.heute, name: "Heute", color: "var(--ink-2)" },
+        { val: v.grenze, name: "Untergrenze", color: "var(--bad)" },
+        { val: v.ziel, name: "Ziel", color: "var(--good)" },
+        { val: anker, name: "Erste Zahl", color: "var(--gold)" }
+      ].filter((mk) => mk.val > 0).sort((a, b) => a.val - b.val);
+      const anchorOf = (px) => (px < 70 ? "start" : px > W2 - 70 ? "end" : "middle");
+      let svg = `<line x1="${pad}" x2="${W2 - pad}" y1="22" y2="22" style="stroke:var(--line);stroke-width:2"/>`;
+      if (v.bis > v.von) {
+        svg += `<rect x="${x(v.von)}" y="12" width="${x(v.bis) - x(v.von)}" height="20" rx="5" style="fill:var(--accent);fill-opacity:.22"/>`;
+        const mid = (x(v.von) + x(v.bis)) / 2;
+        svg += `<text x="${mid}" y="54" text-anchor="${anchorOf(mid)}" style="fill:var(--accent)">Marktspanne ${num(v.von / 1000)}–${num(v.bis / 1000)} T €</text>`;
+      }
+      marks.forEach((mk) => {
+        svg += `<circle cx="${x(mk.val)}" cy="22" r="7" style="fill:${mk.color};stroke:var(--surface);stroke-width:2"><title>${mk.name}: ${eur(mk.val)}</title></circle>`;
+      });
+      box.innerHTML = `<svg viewBox="0 0 ${W2} ${H2}" role="img" aria-label="Deine Zahlen auf einer Gehaltsskala">${svg}</svg>`;
+      host.querySelector('[data-r="keys"]').innerHTML = `<div class="legend">${marks
+        .map((mk) => `<span><i style="background:${mk.color};border-radius:50%"></i>${mk.name} <b class="num">${eur(mk.val)}</b></span>`)
+        .join("")}</div>`;
+      host.querySelector('[data-k="anker"]').textContent = eur(anker);
+      host.querySelector('[data-k="plus"]').textContent = v.heute ? (v.ziel >= v.heute ? "+" : "") + num(((v.ziel - v.heute) / v.heute) * 100, 1) + " %" : "–";
+      const notes = [];
+      if (v.grenze > v.ziel) notes.push("Deine Untergrenze liegt über deinem Ziel. Prüfe die beiden Zahlen noch einmal.");
+      if (v.bis > v.von && anker > v.bis * 1.1) notes.push("Deine erste Zahl liegt deutlich über der Marktspanne. Dafür brauchst du sehr gute Argumente.");
+      if (v.bis > v.von && v.ziel < v.von) notes.push("Dein Ziel liegt unter der Marktspanne. Du darfst mehr verlangen.");
+      host.querySelector('[data-k="say"]').innerHTML = notes.length
+        ? notes.join(" ")
+        : `<b>Dein Einstieg:</b> „Mit Blick auf meine Ergebnisse und die Marktlage halte ich ${eur(anker)} für angemessen.“ Danach: schweigen und zuhören.`;
+      K().setData("salary", v);
     };
     host.addEventListener("input", update);
     update();

@@ -1,15 +1,18 @@
 # Mein Kompass
 
-Eine interaktive Lern-App: Man lernt Schritt für Schritt über **Geld und das Finanzsystem**, **praktische Werkzeuge**, **persönliche Stärken** und **Selbstverwirklichung**. Dazu gibt es Rechner, Diagramme, Quizfragen und Fragen zum Nachdenken.
+Eine interaktive Lern-App: Man lernt Schritt für Schritt über **Geld und das Finanzsystem**, **praktische Werkzeuge**, **Steuern**, **Absicherung und Altersvorsorge**, **persönliche Stärken**, **Verhandeln** und **Selbstverwirklichung**. Dazu gibt es Rechner, Diagramme, Quizfragen und Fragen zum Nachdenken.
 
 ## Was die App kann
 
-- **4 Module mit 15 Lektionen**, jede etwa 4 bis 6 Minuten lang
+- **7 Module mit 24 Lektionen**, jede etwa 4 bis 7 Minuten lang
   - Geld & Finanzsystem: Was ist Geld, wie entsteht Geld, Inflation, Zinseszins
   - Werkzeuge für dein Geld: 50/30/20-Budget, Notgroschen, ETFs und Streuung
+  - Steuern verstehen: Einkommensteuer, Steuererklärung und Werbungskosten, Steuern auf Zinsen und Aktien
+  - Absicherung & Altersvorsorge: Wichtige und unnötige Versicherungen, die drei Säulen der Rente, Rentenlücke
   - Deine Stärken: Was ist eine Stärke, Stärken-Check, Möglichkeiten daraus
+  - Verhandeln: Grundlagen nach dem Harvard-Konzept, Gehaltsverhandlung, Verhandeln im Alltag
   - Selbstverwirklichung & Entwicklung: Bedürfnispyramide, Lebensrad, Ikigai, SMART-Ziele, Gewohnheiten
-- **Interaktive Elemente**: Sparplan-Rechner, Inflationsrechner, Bilanz-Spiel zur Geldentstehung, Budget-Planer, Aktien-Simulation, Stärken-Netzdiagramm, Lebensrad, Ikigai-Diagramm, Zielbaukasten
+- **Interaktive Elemente**: Sparplan-Rechner, Inflationsrechner, Bilanz-Spiel zur Geldentstehung, Budget-Planer, Aktien-Simulation, Steuertarif-Rechner, Werbungskosten-Check, Kapitalertragsteuer-Rechner, Versicherungs-Check, Rentenlücken-Rechner, Übung zu Positionen und Interessen, Gehalts-Verhandlungskarte, Stärken-Netzdiagramm, Lebensrad, Ikigai-Diagramm, Zielbaukasten
 - **Spielelemente**: Erfahrungspunkte (XP), Level und Lernserie (Tage in Folge)
 - **Mein Kompass**: Hier sammeln sich Stärkenprofil, Lebensrad, Ziele, Ikigai und deine Notizen
 - **Benutzerkonten** (optional): Registrieren, Anmelden, Passwort vergessen, Konto löschen. Der Fortschritt wird zwischen Handy, Tablet und Computer abgeglichen.
@@ -57,4 +60,4 @@ Alle Texte, Quizfragen und Lektionen stehen in **`js/content.js`**. Die Datei is
 
 ## Hinweis
 
-Die Finanzinhalte sind allgemeine Bildung und keine Anlage- oder Steuerberatung.
+Die Finanz-, Steuer- und Vorsorgeinhalte sind allgemeine Bildung nach Stand 2026 und keine Anlage-, Steuer- oder Versicherungsberatung. Beträge wie Grundfreibetrag oder Pendlerpauschale ändern sich regelmäßig und sollten jährlich geprüft werden. Sie stehen in `js/content.js` und `js/widgets.js`.
