@@ -361,7 +361,8 @@ window.MODULES = [
     short: "Steuern",
     icon: "percent",
     desc: "Wie die Einkommensteuer funktioniert, warum sich die Steuererklärung lohnt und was für Zinsen und Aktien gilt.",
-    disclaimer: "Allgemeine Informationen nach Stand 2026, keine Steuerberatung. Beträge und Regeln ändern sich regelmäßig.",
+    region: "Deutschland",
+    disclaimer: "Allgemeine Informationen zum deutschen Steuerrecht nach Stand 2026, keine Steuerberatung. Beträge und Regeln ändern sich regelmäßig.",
     lessons: [
       {
         id: "steuern-1",
@@ -373,7 +374,7 @@ window.MODULES = [
             title: "Vom Brutto zum Netto",
             body: "<p>Von deinem Bruttogehalt gehen zwei Dinge ab, bevor es auf deinem Konto landet:</p>",
             points: [
-              "<strong>Sozialabgaben:</strong> Renten-, Kranken-, Pflege- und Arbeitslosenversicherung. Dein Anteil liegt zusammen bei rund 20 % des Bruttos. Den gleichen Betrag ungefähr zahlt dein Arbeitgeber noch einmal obendrauf.",
+              "<strong>Sozialabgaben:</strong> Renten-, Kranken-, Pflege- und Arbeitslosenversicherung. Dein Anteil liegt 2026 zusammen bei rund 21 % des Bruttos. Den gleichen Betrag ungefähr zahlt dein Arbeitgeber noch einmal obendrauf.",
               "<strong>Lohnsteuer:</strong> eine Vorauszahlung auf deine Einkommensteuer. Dein Arbeitgeber überweist sie jeden Monat direkt ans Finanzamt."
             ],
             tip: "<strong>Kirchensteuer</strong> zahlst du nur als Mitglied einer Kirche: 8 % (Bayern, Baden-Württemberg) oder 9 % deiner Einkommensteuer."
@@ -520,7 +521,8 @@ window.MODULES = [
     short: "Vorsorge",
     icon: "shield",
     desc: "Welche Versicherungen du wirklich brauchst und wie du für das Alter vorsorgst.",
-    disclaimer: "Allgemeine Finanzbildung nach Stand 2026, keine Versicherungs-, Renten- oder Anlageberatung.",
+    region: "Deutschland",
+    disclaimer: "Allgemeine Finanzbildung zum deutschen System nach Stand 2026, keine Versicherungs-, Renten- oder Anlageberatung.",
     lessons: [
       {
         id: "vorsorge-1",
@@ -603,7 +605,7 @@ window.MODULES = [
               "<strong>Betriebliche Altersvorsorge:</strong> Ein Teil deines Gehalts fließt in einen Vertrag über deinen Arbeitgeber. Wandelst du Gehalt um, muss er in der Regel mindestens 15 % dazugeben.",
               "<strong>Private Vorsorge:</strong> zum Beispiel ein ETF-Sparplan, eine eigene Immobilie oder staatlich geförderte Verträge."
             ],
-            tip: "<strong>Achtung:</strong> Die staatlich geförderte private Vorsorge wird gerade reformiert. Informiere dich vor einem Abschluss über den aktuellen Stand, zum Beispiel bei der Verbraucherzentrale."
+            tip: "<strong>Neu ab 2027:</strong> Das staatlich geförderte Altersvorsorgedepot löst die Riester-Rente für neue Verträge ab. Neue Riester-Verträge gibt es nur noch bis Ende 2026. Informiere dich vor einem Abschluss über die Details, zum Beispiel bei der Verbraucherzentrale."
           },
           {
             type: "text",

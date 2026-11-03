@@ -13,6 +13,11 @@ Finanzen, Steuern, Vorsorge, persönlichen Stärken, Verhandeln und
 Selbstverwirklichung. Wohnsitz des Betreibers: Österreich. Die App soll später
 kommerziell werden.
 
+**Zielland vorerst Deutschland:** Die Module „Steuern verstehen“ und
+„Absicherung & Altersvorsorge“ beruhen auf deutschem Recht und sind in der App
+mit „Gilt für Deutschland“ gekennzeichnet (Feld `region` in js/content.js).
+Österreich und Schweiz sollen später über einen Länder-Umschalter folgen.
+
 - Repository: github.com/Chris666-web/First (öffentlich)
 - Live-Version: https://chris666-web.github.io/First/ (GitHub Pages, Branch main, Ordner / (root))
 - Arbeitsweise: Änderungen auf dem Branch
@@ -73,8 +78,6 @@ Keine bekannten Fehler. Offen sind:
   Danach Datenschutzerklärung (js/legal.js) ergänzen.
 - In der Datenschutzerklärung prüfen: GitHub im EU-US Data Privacy Framework
   zertifiziert? Standardvertragsklauseln im Supabase-DPA? Altersgrenze „ab 14“ passend?
-- Steuerbeträge 2026 gegenprüfen (Grundfreibetrag 12.348 €, Pendlerpauschale
-  0,38 € ab 1. km, Homeoffice 6 €/Tag bis 1.260 €, Arbeitnehmer-Pauschbetrag 1.230 €)
 - Feedback-Knopf: Weg über E-Mail ist zu umständlich, daher vorerst zurückgestellt.
   Bessere Lösung (z. B. Formular in der App) später überlegen.
 
@@ -83,14 +86,27 @@ sofort neu; bereits gelöste Quizfragen müssen beim Wiederholen nicht nochmal
 beantwortet werden; der Datenschutz-Link im Registrierformular öffnet sich in
 einem neuen Fenster, die Eingaben bleiben erhalten.
 
+Geprüft am 3. November 2026 (deutsche Werte 2026): Steuertarif § 32a EStG mit
+Grundfreibetrag 12.348 €, Entfernungspauschale 0,38 € ab 1. km (dauerhaft),
+Homeoffice 6 €/Tag bis 1.260 €, Arbeitnehmer-Pauschbetrag 1.230 €,
+Abgeltungsteuer 26,375 %, Sparerpauschbetrag 1.000 €, Pflichtveranlagung und
+Frist 31. Juli, Rentenniveau 48 %. Korrigiert: Sozialabgaben rund 21 % statt
+20 %; Kranken-/Pflegeversicherung der Rentner rund 12 % statt 11 %;
+Riester-Hinweis auf das beschlossene Altersvorsorgedepot ab 2027 aktualisiert.
+Für 2027 geplante Änderungen (z. B. Tarif, Pauschbetrag) Anfang 2027 erneut prüfen.
+
 ## 5. Nächste geplante Schritte
-1. App 3 bis 5 Testpersonen geben (Feedback-Weg noch klären)
-2. Steuerbeträge 2026 gegenprüfen
+1. Feedback-Formular in der App (Speicherung in Supabase)
+2. App 3 bis 5 Testpersonen geben (vorwarnen: Steuer/Vorsorge gilt für
+   Deutschland, ideal auch 1 bis 2 Testpersonen aus Deutschland)
 3. Eigenen E-Mail-Versand in Supabase einrichten
 4. App-Namen und Rechtsform klären (WKO-Gründerservice), Rechtstexte prüfen lassen
-5. Vor dem kommerziellen Start: Repository privat, Umzug auf Cloudflare Pages,
+5. Impressum auf deutsche Regeln prüfen bzw. anpassen (§ 5 DDG), weil sich die
+   App auch an Menschen in Deutschland richtet
+6. Vor dem kommerziellen Start: Repository privat, Umzug auf Cloudflare Pages,
    eigene Domain (danach Adressen in Supabase und Datenschutzerklärung anpassen)
-6. Später je nach Feedback: Erinnerungen, Logo, weitere Lektionen
+7. Später: Länder-Umschalter (Österreich, Schweiz) für Steuer- und Vorsorge-Module
+8. Später je nach Feedback: Erinnerungen, Logo, weitere Lektionen
 
 ## Arbeiten mit Claude
 - Neuer Chat: einfach schreiben „Lies PROJEKTSTAND.md und mach weiter mit …“
