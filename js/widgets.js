@@ -44,6 +44,24 @@
     for (let v = Math.floor(min / step) * step; v <= Math.ceil(max / step) * step + step / 2; v += step) out.push(+v.toFixed(10));
     return out;
   }
+  /*
+   * Zeichnet ein Diagramm neu, sobald sich seine Breite ändert
+   * (z. B. beim Drehen des Handys oder Ändern der Fenstergröße).
+   */
+  function redrawOnResize(el, fn) {
+    if (!el || !window.ResizeObserver) return;
+    let w = Math.round(el.clientWidth), raf = 0;
+    const ro = new ResizeObserver(() => {
+      if (!el.isConnected) { ro.disconnect(); return; }
+      const nw = Math.round(el.clientWidth);
+      if (!nw || nw === w) return;
+      w = nw;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => fn());
+    });
+    ro.observe(el);
+  }
+
   const compact = (v) =>
     Math.abs(v) >= 1e6 ? num(v / 1e6, 1) + " Mio." : Math.abs(v) >= 1e4 ? num(v / 1e3) + " T" : num(v);
 
@@ -286,6 +304,7 @@
     };
     host.addEventListener("input", update);
     update();
+    redrawOnResize(host.querySelector(".chart"), update);
   };
 
   W.compound = function (host) {
@@ -333,6 +352,7 @@
     };
     host.addEventListener("input", update);
     update();
+    redrawOnResize(host.querySelector(".chart"), update);
   };
 
   W.budget = function (host) {
@@ -449,11 +469,15 @@
       <div class="kpis" data-r="kpis"></div>
       <p class="verdict small">Jeder Punkt ist ein Anleger nach 10 Jahren. Die gestrichelte Linie markiert die eingesetzten 10.000 €.</p>
     </div>`;
+    let groups = [];
     const draw = () => {
-      const groups = [
+      groups = [
         { name: "1 Aktie", color: "var(--s1)", vals: Array.from({ length: N }, () => investor(1)) },
         { name: "50 Aktien", color: "var(--s2)", vals: Array.from({ length: N }, () => investor(50)) }
       ];
+      render();
+    };
+    const render = () => {
       const chart = host.querySelector(".chart");
       const Wd = Math.max(300, Math.round(chart.clientWidth) || 640), Hd = 230, m = { l: 86, r: 22, t: 10, b: 30 };
       const x = (v) => m.l + ((Wd - m.l - m.r) * Math.min(v, CAP)) / CAP;
@@ -482,6 +506,7 @@
     };
     host.querySelector('[data-r="run"]').addEventListener("click", draw);
     draw();
+    redrawOnResize(host.querySelector(".chart"), render);
   };
 
   /* Stärken-Check */
@@ -787,6 +812,7 @@
     };
     host.addEventListener("input", update);
     update();
+    redrawOnResize(host.querySelector(".chart"), update);
   };
 
   /* ---------- Steuern ---------- */
@@ -849,6 +875,7 @@
     };
     host.addEventListener("input", update);
     update();
+    redrawOnResize(host.querySelector(".chart"), update);
   };
 
   W.werbungskosten = function (host) {
@@ -1162,6 +1189,7 @@
     };
     host.addEventListener("input", update);
     update();
+    redrawOnResize(host.querySelector('[data-r="line"]'), update);
   };
 
   window.Widgets = W;

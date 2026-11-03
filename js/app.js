@@ -216,7 +216,7 @@
     if (!found) return renderHome();
     if (!isUnlocked(found.module, found.index)) return renderModule(found.module.id);
     setTab("start");
-    if (!run || run.id !== lid) run = { id: lid, step: 0, correct: 0, earned: 0 };
+    if (!run || run.id !== lid) run = { id: lid, step: 0, correct: 0, earned: 0, solved: {} };
     drawStep(found);
   }
 
@@ -275,7 +275,10 @@
     box.innerHTML = `<span class="eyebrow">Quiz</span><h2>${st.q}</h2>
       <div class="options">${st.options.map((o, i) => `<button type="button" class="option" data-i="${i}"><span class="key">${"ABCD"[i]}</span><span>${o}</span></button>`).join("")}</div>
       <div id="fb" aria-live="polite"></div>`;
-    nextBtn.disabled = true;
+    // Schon gelöst (Lektion erledigt oder Frage in diesem Durchgang beantwortet): Weiter ist sofort möglich
+    const solved = !!(state.done[l.id] || state.quiz[key] || run.solved[key]);
+    nextBtn.disabled = !solved;
+    if (solved) document.getElementById("fb").innerHTML = `<p class="small muted">Diese Frage hast du schon gelöst. Du kannst sie noch einmal beantworten oder direkt weitergehen.</p>`;
     let tries = 0;
     box.querySelectorAll(".option").forEach((b) =>
       b.addEventListener("click", () => {
@@ -285,6 +288,7 @@
         if (i === st.correct) {
           b.classList.add("correct");
           box.querySelectorAll(".option").forEach((x) => (x.disabled = true));
+          run.solved[key] = true;
           let bonus = "";
           if (tries === 1 && !state.quiz[key]) {
             state.quiz[key] = true;
