@@ -196,6 +196,7 @@
         <h1>${esc(m.title)}</h1>
         <p class="muted">${esc(m.desc)} · ${doneCount(m)} von ${m.lessons.length} Lektionen erledigt</p>
       </section>
+      ${m.region ? `<p class="tip small"><strong>Gilt für ${esc(m.region)}.</strong> Beträge und Regeln in diesem Modul beziehen sich auf ${esc(m.region)}. In Österreich und der Schweiz gelten andere Regeln. Weitere Länder folgen.</p>` : ""}
       <ol class="path">${m.lessons.map((l, i) => {
         const done = state.done[l.id], open = isUnlocked(m, i), isNext = next && next.id === l.id;
         const cls = done ? "is-done" : isNext ? "is-next" : open ? "" : "is-locked";

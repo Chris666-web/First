@@ -1030,7 +1030,7 @@
   };
 
   W.pensionGap = function (host) {
-    const KV = 0.89; // grob: Kranken- und Pflegeversicherung der Rentner abziehen
+    const KV = 0.88; // grob: Kranken- und Pflegeversicherung der Rentner 2026 (7,3 % + halber Zusatzbeitrag + 3,6 % Pflege) abziehen
     const s = K().getData("pension") || { netto: 2400, rente: 1300, anteil: 80, jahre: 30, dauer: 20, rendite: 3 };
     host.innerHTML = `<div class="widget">
       <div class="controls">
@@ -1051,7 +1051,7 @@
         <div class="kpi"><span class="v" data-k="cap"></span><span class="l">nötiges Vermögen zum Rentenstart</span></div>
         <div class="kpi"><span class="v" data-k="save"></span><span class="l">Sparrate pro Monat ab heute</span></div>
       </div>
-      <p class="small muted">Alle Beträge in heutiger Kaufkraft. Von der Bruttorente werden grob 11 % für Kranken- und Pflegeversicherung abgezogen. Steuern auf die Rente sind nicht berücksichtigt.</p>
+      <p class="small muted">Alle Beträge in heutiger Kaufkraft. Von der Bruttorente werden grob 12 % für Kranken- und Pflegeversicherung abgezogen. Steuern auf die Rente sind nicht berücksichtigt.</p>
     </div>`;
     const update = () => {
       const v = readInputs(host);
