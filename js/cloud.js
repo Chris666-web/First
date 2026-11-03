@@ -315,8 +315,8 @@
             <div class="field"><label for="np2">Passwort</label><input id="np2" type="password" autocomplete="new-password" minlength="8" required><span class="small muted">Mindestens 8 Zeichen</span></div>
             <button class="btn" type="submit">Konto erstellen</button>
             <p class="small muted">Dein Lernfortschritt, deine Ziele und Notizen werden in deinem Konto gespeichert.${cfg.privacyUrl
-              ? ` Mehr dazu in der <a href="${esc(cfg.privacyUrl)}" target="_blank" rel="noopener">Datenschutzerklärung</a>.`
-              : ` Mehr dazu in der <a href="#datenschutz">Datenschutzerklärung</a>.`}</p>
+              ? ` Mehr dazu in der <a href="${esc(cfg.privacyUrl)}" target="_blank" rel="noopener">Datenschutzerklärung</a> (öffnet sich in einem neuen Fenster, deine Eingaben bleiben erhalten).`
+              : ` Mehr dazu in der <a href="#datenschutz" target="_blank" rel="noopener">Datenschutzerklärung</a> (öffnet sich in einem neuen Fenster, deine Eingaben bleiben erhalten).`}</p>
             <p class="form-msg" role="status"></p></form>` : ""}
         ${tab === "vergessen" ? `<form id="f-forgot" class="form" novalidate>
             <p class="muted">Gib deine E-Mail-Adresse ein. Du bekommst einen Link, mit dem du ein neues Passwort festlegst.</p>

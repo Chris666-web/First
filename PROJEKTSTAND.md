@@ -75,14 +75,17 @@ Keine bekannten Fehler. Offen sind:
   zertifiziert? Standardvertragsklauseln im Supabase-DPA? Altersgrenze „ab 14“ passend?
 - Steuerbeträge 2026 gegenprüfen (Grundfreibetrag 12.348 €, Pendlerpauschale
   0,38 € ab 1. km, Homeoffice 6 €/Tag bis 1.260 €, Arbeitnehmer-Pauschbetrag 1.230 €)
-- Kleinigkeiten: Diagramme passen sich beim Drehen des Handys erst nach einer
-  Eingabe an; bereits erledigte Lektionen verlangen beim Wiederholen erneut die
-  Quizantworten; der Link zur Datenschutzerklärung im Registrierformular
-  verlässt das Formular (Eingaben gehen verloren)
+- Feedback-Knopf: Weg über E-Mail ist zu umständlich, daher vorerst zurückgestellt.
+  Bessere Lösung (z. B. Formular in der App) später überlegen.
+
+Erledigt am 3. November 2026: Diagramme zeichnen sich beim Drehen des Handys
+sofort neu; bereits gelöste Quizfragen müssen beim Wiederholen nicht nochmal
+beantwortet werden; der Datenschutz-Link im Registrierformular öffnet sich in
+einem neuen Fenster, die Eingaben bleiben erhalten.
 
 ## 5. Nächste geplante Schritte
-1. Kleinigkeiten aus Punkt 4 beheben und einen Feedback-Knopf einbauen
-2. App 3 bis 5 Testpersonen geben
+1. App 3 bis 5 Testpersonen geben (Feedback-Weg noch klären)
+2. Steuerbeträge 2026 gegenprüfen
 3. Eigenen E-Mail-Versand in Supabase einrichten
 4. App-Namen und Rechtsform klären (WKO-Gründerservice), Rechtstexte prüfen lassen
 5. Vor dem kommerziellen Start: Repository privat, Umzug auf Cloudflare Pages,
