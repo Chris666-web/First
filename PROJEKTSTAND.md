@@ -81,10 +81,14 @@ Keine bekannten Fehler. Offen sind:
 - Feedback-Knopf: Weg über E-Mail ist zu umständlich, daher vorerst zurückgestellt.
   Bessere Lösung (z. B. Formular in der App) später überlegen.
 
-Erledigt am 3. November 2026: Diagramme zeichnen sich beim Drehen des Handys
-sofort neu; bereits gelöste Quizfragen müssen beim Wiederholen nicht nochmal
-beantwortet werden; der Datenschutz-Link im Registrierformular öffnet sich in
-einem neuen Fenster, die Eingaben bleiben erhalten.
+Erledigt am 3. November 2026:
+- Diagramme zeichnen sich beim Drehen des Handys sofort neu
+- Bereits gelöste Quizfragen müssen beim Wiederholen nicht nochmal beantwortet werden
+- Datenschutz-Link im Registrierformular öffnet sich in einem neuen Fenster,
+  die Eingaben bleiben erhalten
+- Symbolgrößen korrigiert: Zurück-Pfeil „Alle Module“ war riesig, Pfeil im
+  Weiter-Knopf war unsichtbar, Pfeil bei „Weiter lernen“ war zu groß
+- Hinweis „Gilt für Deutschland“ in den Modulen Steuern und Vorsorge
 
 Geprüft am 3. November 2026 (deutsche Werte 2026): Steuertarif § 32a EStG mit
 Grundfreibetrag 12.348 €, Entfernungspauschale 0,38 € ab 1. km (dauerhaft),
